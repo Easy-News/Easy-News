@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>회원가입</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+        }
+        .header-bar {
+            background-color: #B3E5FC; /* 파스텔톤 블루 */
+            color: #333;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .signup-form {
+            background: #fff;
+            padding: 20px 30px;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            margin: 40px auto;
+            box-sizing: border-box;
+        }
+        .signup-form h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .signup-form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .signup-form input[type="text"],
+        .signup-form input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        /* 관심 카테고리 필드셋 */
+        .category-fieldset {
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .category-fieldset legend {
+            font-weight: bold;
+            padding: 0 8px;
+        }
+        .category-fieldset .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .category-fieldset label {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .category-fieldset input[type="checkbox"] {
+            margin-right: 6px;
+        }
+        .signup-form button {
+            width: 100%;
+            padding: 12px;
+            background: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .signup-form button:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+<div class="header-bar">이지뉴스</div>
+
+<form class="signup-form" action="/signup" method="post">
+    <h2>회원가입</h2>
+
+    <label for="username">아이디</label>
+    <input type="text" id="username" name="username" placeholder="아이디를 입력하세요" required>
+
+    <label for="password">비밀번호</label>
+    <input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요" required>
+
+    <label for="nickname">닉네임</label>
+    <input type="text" id="nickname" name="nickname" placeholder="닉네임을 입력하세요" required>
+
+    <!-- 관심 카테고리 섹션 -->
+    <fieldset class="category-fieldset">
+        <legend>관심 카테고리 (중복 선택 가능)</legend>
+        <div class="checkbox-group">
+            <label><input type="checkbox" name="categories" value="politics">정치</label>
+            <label><input type="checkbox" name="categories" value="economy">경제</label>
+            <label><input type="checkbox" name="categories" value="society">사회</label>
+            <label><input type="checkbox" name="categories" value="it_science">IT/과학</label>
+            <label><input type="checkbox" name="categories" value="world">세계</label>
+        </div>
+    </fieldset>
+
+    <button type="submit">가입하기</button>
+</form>
+</body>
+</html>

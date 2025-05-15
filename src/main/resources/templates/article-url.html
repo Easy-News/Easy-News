@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>기사 URL 보기</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            color: #333;
+        }
+        a {
+            text-decoration: none;
+            color: #1a0dab;
+        }
+
+        /* ─────────── HEADER ─────────── */
+        header.header-bar {
+            background-color: #B3E5FC;  /* 파스텔톤 블루 */
+        }
+        header.header-bar .logo {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            padding: 12px 0 4px;
+        }
+        header.header-bar .header-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 16px 20px;
+            background: #fff;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+        }
+        header.header-bar .header-nav .categories a {
+            margin-right: 16px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+        header.header-bar .header-nav .categories a:last-child {
+            margin-right: 0;
+        }
+        header.header-bar .header-nav .user a {
+            font-size: 16px;
+            padding: 6px 12px;
+            border: 2px solid #333;
+            border-radius: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100px;
+            color: #333;
+        }
+
+        /* ────────── MAIN CONTENT ────────── */
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            background: #fff;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 20px 30px;
+            box-sizing: border-box;
+        }
+        .article-title {
+            font-size: 32px;
+            margin: 0 0 10px;
+            font-weight: bold;
+        }
+        .article-meta {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .article-meta span {
+            margin-right: 20px;
+        }
+        .article-url {
+            font-size: 16px;
+            padding: 12px;
+            background: #f0f8ff;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            word-break: break-all;
+        }
+        .article-url a {
+            color: #1a0dab;
+        }
+    </style>
+</head>
+<body>
+
+<header class="header-bar">
+    <div class="logo">이지뉴스</div>
+    <nav class="header-nav">
+        <div class="categories">
+            <a href="#">정치</a>
+            <a href="#">경제</a>
+            <a href="#">사회</a>
+            <a href="#">IT/과학</a>
+            <a href="#">세계</a>
+        </div>
+        <div class="user">
+            <a href="#">홍길동</a>
+        </div>
+    </nav>
+</header>
+
+<div class="container">
+    <article>
+        <h1 class="article-title">[기사 제목이 여기에 들어갑니다]</h1>
+        <div class="article-meta">
+            <span>발행일: 2025-05-05</span>
+            <span>카테고리: IT/과학</span>
+        </div>
+        <div class="article-url">
+            <strong>원문 URL:</strong><br>
+            <a href="https://example.com/news/12345" target="_blank" rel="noopener">
+                https://example.com/news/12345
+            </a>
+        </div>
+    </article>
+</div>
+
+</body>
+</html>
