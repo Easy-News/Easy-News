@@ -15,6 +15,6 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         // 모든 요청에 대해 인터셉터 적용
         registry.addInterceptor(visitLoggingInterceptor)
-                .addPathPatterns("/**");
+                .addPathPatterns("/news/**");
     }
 }

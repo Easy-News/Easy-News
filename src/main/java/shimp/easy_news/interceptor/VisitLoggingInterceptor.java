@@ -11,8 +11,8 @@ import shimp.easy_news.domain.User;
 @Component
 public class VisitLoggingInterceptor implements HandlerInterceptor {
 
-//    @Autowired
-//    private VisitLogService visitLogService;
+    @Autowired
+    private VisitLogService visitLogService;
 
     @Override
     public boolean preHandle(HttpServletRequest request,
@@ -23,7 +23,7 @@ public class VisitLoggingInterceptor implements HandlerInterceptor {
             User loginUser = (User) session.getAttribute("loginUser");
             if (loginUser != null) {
                 String uri = request.getRequestURI();
-//                visitLogService.logVisit(loginUser.getUserId(), uri);  // TODO: 구현해야함
+                visitLogService.logVisit(loginUser.getUserId(), uri);  // TODO: 구현해야함
             }
         }
         return true;  // 계속 진행

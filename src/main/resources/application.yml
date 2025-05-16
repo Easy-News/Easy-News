@@ -1,14 +1,20 @@
 spring:
   profiles:
     include:
-      - "h2db" #원하는 profile 활성화 시키기
+      - "default"
+      - "mysql" #원하는 profile 활성화 시키기
+---
+spring:
+  config:
+    activate:
+      on-profile: "default"
+  application:
+    name: "easy-news"
 ---
 spring:
   config:
     activate:
       on-profile: "h2db"
-  application:
-    name: "easy-news"
   h2:
     console:
       enabled: true
@@ -26,4 +32,19 @@ spring:
     hibernate:
       ddl-auto: create-drop # 매 실행시 db create & 서버 종료시 db drop
     defer-datasource-initialization: true
+    show-sql: true
+---
+spring:
+  config:
+    activate:
+      on-profile: "mysql"
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${MYSQL_URL}
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+  jpa:
+    database: mysql
+    hibernate:
+      ddl-auto: none
     show-sql: true
