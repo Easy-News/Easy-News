@@ -32,7 +32,6 @@ public class UserClicks {
     private int travel_and_leisure_clicks = 0;
     private int column_and_opinion_clicks = 0;
 
-    // TODO: ENUM으로 받으면 그 value++ 하게
     public void incrementDomestic_politics_clicks() {
         this.domestic_politics_clicks++;
     }
