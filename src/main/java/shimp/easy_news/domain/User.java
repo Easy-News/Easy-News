@@ -2,6 +2,8 @@ package shimp.easy_news.domain;
 
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
@@ -29,6 +31,7 @@ public class User {
     private String email;
 
     @Column(name = "interested", nullable = false)
+    @Enumerated(value = EnumType.STRING)
     private Category interested;
 
     @Column(name = "password", nullable = false)
