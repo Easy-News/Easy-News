@@ -1,11 +1,8 @@
-package shimp.easy_news.domain;
+package shimp.easy_news.news.domain;
 
 import java.time.LocalDate;
 import lombok.Getter;
 import lombok.Setter;
-import shimp.easy_news.Category;
-import shimp.easy_news.NewsType;
-import shimp.easy_news.SubCategory;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.Id;
@@ -14,6 +11,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.EnumType;
+import shimp.easy_news.news.constant.Category;
+import shimp.easy_news.news.constant.NewsType;
+import shimp.easy_news.news.constant.SubCategory;
 
 @Entity
 @Getter

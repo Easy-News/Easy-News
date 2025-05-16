@@ -1,25 +1,18 @@
-package shimp.easy_news.interceptor;
+package shimp.easy_news.recommendation;
 
-import shimp.easy_news.domain.User;
-import shimp.easy_news.domain.UserClicks;
-import shimp.easy_news.repository.UserRepository;
+import lombok.AllArgsConstructor;
+import shimp.easy_news.user.domain.UserClicks;
+import shimp.easy_news.user.repository.UserRepository;
 
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
-import shimp.easy_news.domain.News;
-import shimp.easy_news.SubCategory;
-import shimp.easy_news.repository.NewsRepository;
+import shimp.easy_news.news.constant.SubCategory;
+import shimp.easy_news.news.repository.NewsRepository;
 
 @Service
+@AllArgsConstructor
 public class VisitLogService {
     private final NewsRepository newsRepository;
     private final UserRepository userRepository;
-
-    @Autowired
-    public VisitLogService(NewsRepository newsRepository, UserRepository userRepository) {
-        this.newsRepository = newsRepository;
-        this.userRepository = userRepository;
-    }
 
     public void logVisit(Long userId, String uri) {
         if (uri.startsWith("/news/")) {

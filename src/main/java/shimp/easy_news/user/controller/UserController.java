@@ -1,4 +1,4 @@
-package shimp.easy_news.controller;
+package shimp.easy_news.user.controller;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
@@ -6,12 +6,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.beans.factory.annotation.Autowired;
-import shimp.easy_news.domain.User;
-import shimp.easy_news.domain.UserClicks;
-import shimp.easy_news.repository.UserRepository;
+import shimp.easy_news.user.repository.UserRepository;
+import shimp.easy_news.user.domain.User;
+import shimp.easy_news.user.domain.UserClicks;
 
 @Controller
 @Slf4j

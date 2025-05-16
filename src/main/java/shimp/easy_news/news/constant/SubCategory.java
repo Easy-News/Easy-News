@@ -1,4 +1,4 @@
-package shimp.easy_news;
+package shimp.easy_news.news.constant;
 
 public enum SubCategory {
     DOMESTIC_POLITICS,                // 국내정치

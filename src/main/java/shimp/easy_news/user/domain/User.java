@@ -1,4 +1,4 @@
-package shimp.easy_news.domain;
+package shimp.easy_news.user.domain;
 
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -11,7 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
-import shimp.easy_news.Category;
+import shimp.easy_news.news.constant.Category;
 
 @Entity
 @Getter

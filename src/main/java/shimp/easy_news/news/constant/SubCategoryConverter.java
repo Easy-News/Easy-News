@@ -1,4 +1,4 @@
-package shimp.easy_news;
+package shimp.easy_news.news.constant;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;

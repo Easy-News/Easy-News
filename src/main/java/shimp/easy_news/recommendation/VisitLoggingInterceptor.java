@@ -1,17 +1,17 @@
-package shimp.easy_news.interceptor;
+package shimp.easy_news.recommendation;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
-import shimp.easy_news.domain.User;
+import shimp.easy_news.user.domain.User;
 
 @Component
+@AllArgsConstructor
 public class VisitLoggingInterceptor implements HandlerInterceptor {
 
-    @Autowired
     private VisitLogService visitLogService;
 
     @Override

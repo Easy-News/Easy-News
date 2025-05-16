@@ -1,4 +1,4 @@
-package shimp.easy_news.domain;
+package shimp.easy_news.user.domain;
 
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
