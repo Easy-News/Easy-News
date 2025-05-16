@@ -1,32 +1,36 @@
 package shimp.easy_news.domain;
 
 import jakarta.persistence.Embeddable;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Embeddable
 public class UserClicks {
 
-    private int domestic_politics_clicks;
-    private int election_and_presidential_clicks;
-    private int international_politics_and_diplomacy_clicks;
-    private int economic_policy_clicks;
-    private int corporate_and_industry_trends_clicks;
-    private int finance_and_securities_clicks;
-    private int it_and_science_technology_clicks;
-    private int telecommunication_and_mobile_clicks;
-    private int society_and_welfare_clicks;
-    private int incident_and_accident_clicks;
-    private int legal_and_security_clicks;
-    private int environment_and_climate_clicks;
-    private int culture_and_art_clicks;
-    private int entertainment_and_broadcasting_clicks;
-    private int sports_clicks;
-    private int health_and_medical_clicks;
-    private int education_and_admissions_clicks;
-    private int real_estate_and_construction_clicks;
-    private int travel_and_leisure_clicks;
-    private int column_and_opinion_clicks;
+    private int domestic_politics_clicks = 0;
+    private int election_and_presidential_clicks = 0;
+    private int international_politics_and_diplomacy_clicks = 0;
+    private int economic_policy_clicks = 0;
+    private int corporate_and_industry_trends_clicks = 0;
+    private int finance_and_securities_clicks = 0;
+    private int it_and_science_technology_clicks = 0;
+    private int telecommunication_and_mobile_clicks = 0;
+    private int society_and_welfare_clicks = 0;
+    private int incident_and_accident_clicks = 0;
+    private int legal_and_security_clicks = 0;
+    private int environment_and_climate_clicks = 0;
+    private int culture_and_art_clicks = 0;
+    private int entertainment_and_broadcasting_clicks = 0;
+    private int sports_clicks = 0;
+    private int health_and_medical_clicks = 0;
+    private int education_and_admissions_clicks = 0;
+    private int real_estate_and_construction_clicks = 0;
+    private int travel_and_leisure_clicks = 0;
+    private int column_and_opinion_clicks = 0;
 
     // TODO: ENUM으로 받으면 그 value++ 하게
     public void incrementDomestic_politics_clicks() {
@@ -107,5 +111,9 @@ public class UserClicks {
 
     public void incrementColumn_and_opinion_clicks() {
         this.column_and_opinion_clicks++;
+    }
+
+    public static UserClicks ofZero() {
+        return new UserClicks();
     }
 }

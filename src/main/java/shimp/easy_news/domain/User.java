@@ -7,14 +7,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import lombok.Getter;
-import org.hibernate.annotations.Type;
-import shimp.easy_news.SubCategory;
-import shimp.easy_news.SubCategoryConverter;
+import lombok.Setter;
+import shimp.easy_news.Category;
 
 @Entity
 @Getter
+@Setter
 @Table(name = "users")
 public class User {
 
@@ -29,9 +28,8 @@ public class User {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Convert(converter = SubCategoryConverter.class)
     @Column(name = "interested", nullable = false)
-    private SubCategory interested;
+    private Category interested;
 
     @Column(name = "password", nullable = false)
     private String password;
