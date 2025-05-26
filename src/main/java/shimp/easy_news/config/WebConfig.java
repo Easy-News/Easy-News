@@ -13,8 +13,20 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        // 모든 요청에 대해 인터셉터 적용
         registry.addInterceptor(visitLoggingInterceptor)
-                .addPathPatterns("/news/**");
+                .addPathPatterns("/news/**")  // 뉴스 관련 경로에만 적용
+                .excludePathPatterns(
+                        "/news/api/**",     // API 호출 제외
+                        "/news/admin/**",   // 관리자 페이지 제외
+                        "/**/*.css",        // CSS 파일 제외
+                        "/**/*.js",         // JS 파일 제외
+                        "/**/*.png",        // 이미지 파일들 제외
+                        "/**/*.jpg",
+                        "/**/*.jpeg",
+                        "/**/*.gif",
+                        "/**/*.ico",
+                        "/**/*.svg"
+                )
+                .order(1); // 인터셉터 실행 순서 (낮을수록 먼저 실행)
     }
 }

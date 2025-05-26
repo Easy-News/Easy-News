@@ -3,29 +3,98 @@ package shimp.easy_news.recommendation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import shimp.easy_news.user.domain.User;
 
+import java.util.concurrent.CompletableFuture;
+
+@Slf4j
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class VisitLoggingInterceptor implements HandlerInterceptor {
 
-    private VisitLogService visitLogService;
+    private final VisitLogService visitLogService;
 
     @Override
     public boolean preHandle(HttpServletRequest request,
                              HttpServletResponse response,
                              Object handler) {
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            User loginUser = (User) session.getAttribute("loginUser");
-            if (loginUser != null) {
-                String uri = request.getRequestURI();
-                visitLogService.logVisit(loginUser.getUserId(), uri);
+        try {
+            // GET 요청만 로깅 (POST 등은 제외)
+            if (!"GET".equalsIgnoreCase(request.getMethod())) {
+                return true;
             }
+
+            HttpSession session = request.getSession(false);
+            if (session == null) {
+                return true;
+            }
+
+            User loginUser = (User) session.getAttribute("loginUser");
+            if (loginUser == null) {
+                return true;
+            }
+
+            String uri = request.getRequestURI();
+
+            // 로깅 대상 URI인지 확인
+            if (isLoggableUri(uri)) {
+                // 비동기로 로깅 처리하여 응답 성능에 영향 최소화
+                CompletableFuture.runAsync(() -> {
+                    try {
+                        visitLogService.logVisit(loginUser.getUserId(), uri);
+                    } catch (Exception e) {
+                        log.error("비동기 방문 로그 기록 중 오류 발생", e);
+                    }
+                });
+
+                log.debug("방문 로그 비동기 처리 요청: 사용자 ID={}, URI={}",
+                        loginUser.getUserId(), uri);
+            }
+
+        } catch (Exception e) {
+            log.error("VisitLoggingInterceptor에서 예외 발생", e);
+            // 인터셉터에서 예외가 발생해도 요청은 계속 진행되어야 함
         }
-        return true;  // 계속 진행
+
+        return true; // 계속 진행
+    }
+
+    /**
+     * 로깅 대상 URI인지 확인
+     */
+    private boolean isLoggableUri(String uri) {
+        if (uri == null || uri.isEmpty()) {
+            return false;
+        }
+
+        // 뉴스 상세 페이지만 로깅
+        if (uri.startsWith("/news/") && uri.length() > "/news/".length()) {
+            // 정적 리소스 제외
+            return !uri.contains(".css") &&
+                    !uri.contains(".js") &&
+                    !uri.contains(".png") &&
+                    !uri.contains(".jpg") &&
+                    !uri.contains(".jpeg") &&
+                    !uri.contains(".gif") &&
+                    !uri.contains(".ico") &&
+                    !uri.contains(".svg");
+        }
+
+        return false;
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request,
+                                HttpServletResponse response,
+                                Object handler,
+                                Exception ex) {
+        // 필요시 후처리 로직 추가
+        if (ex != null) {
+            log.error("요청 처리 중 예외 발생: {}", request.getRequestURI(), ex);
+        }
     }
 }
