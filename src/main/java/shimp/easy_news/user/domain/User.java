@@ -1,6 +1,5 @@
 package shimp.easy_news.user.domain;
 
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -9,6 +8,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Column;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.CascadeType;
 import lombok.Getter;
 import lombok.Setter;
 import shimp.easy_news.news.constant.Category;
@@ -40,6 +41,6 @@ public class User {
     @Column(name = "nickname")
     private String nickname;
 
-    @Embedded
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private UserClicks userClicks;
 }
