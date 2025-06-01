@@ -1,0 +1,70 @@
+<!-- resources/templates/mail/news-summary-email.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>오늘의 뉴스 요약</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            padding: 2rem;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 2rem;
+            max-width: 700px;
+            margin: 0 auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 1rem;
+        }
+        h1 {
+            font-size: 1.8rem;
+            color: #2c3e50;
+        }
+        .section-title {
+            margin-top: 2rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #34495e;
+        }
+        .content {
+            margin-top: 0.5rem;
+            line-height: 1.6;
+            white-space: pre-line; /* 줄바꿈 유지 */
+        }
+        .footer {
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: #999;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>📰 EasyNews: 오늘의 헤드라인 요약</h1>
+    </div>
+
+    <div>
+        <div class="section-title">뉴스 요약</div>
+        <div class="content" th:text="${summary}">GPT가 생성한 요약문</div>
+    </div>
+
+    <div>
+        <div class="section-title">뉴스 설명</div>
+        <div class="content" th:text="${explanation}">GPT가 생성한 설명문</div>
+    </div>
+
+    <div class="footer">
+        본 메일은 EasyNews AI가 자동으로 생성한 콘텐츠입니다.
+    </div>
+</div>
+</body>
+</html>

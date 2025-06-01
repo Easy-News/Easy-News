@@ -48,3 +48,8 @@ spring:
     hibernate:
       ddl-auto: none
     show-sql: true
+
+
+openai:
+  api-key: ${GPT_API_KEY}
+  api-url: "https://api.openai.com/v1/chat/completions"
