@@ -4,6 +4,7 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -19,8 +20,10 @@ import shimp.easy_news.user.repository.UserRepository;
 public class MailService {
     private final UserRepository userRepository;
     private final TemplateEngine templateEngine;
-    private static final String senderEmail = "shiiiiimp@gmail.com";
     private final JavaMailSender javaMailSender;
+
+    @Value("${mail.username}")  // ✅ application.yml 또는 .properties에서 주입받음
+    private String senderEmail;
 
     private MimeMessage createMail(String mail, String summary) {
 
