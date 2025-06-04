@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import shimp.easy_news.news.dto.GptResponseDto;
 import shimp.easy_news.news.repository.NewsRepository;
+import shimp.easy_news.news.service.MailService;
 import shimp.easy_news.news.service.SummaryGptService;
 
 @Controller
@@ -17,6 +18,7 @@ public class SummaryController {
 
     private final NewsRepository newsRepository;
     private final SummaryGptService summaryGptService;
+    private final MailService mailService;
 
     @Value("${openai.api-url}")
     private String apiUrl;
@@ -24,14 +26,15 @@ public class SummaryController {
     @GetMapping("/chat")
     public String summary(Model model) {
         String modelName = "gpt-3.5-turbo";
+        String email = "kimjyun27@gmail.com";
 
         try {
             var response = summaryGptService.chat(modelName, apiUrl);
-//            return response.getChoices().get(0).getMessage().getContent();
+            String summary = response.getChoices().get(0).getMessage().getContent();
             model.addAttribute("summary", response.getChoices().get(0).getMessage().getContent());
+            mailService.sendEmail(email, summary);
         } catch (Exception e) {
             model.addAttribute("summary", "요약 중 오류 발생: " + e.getMessage());
-            return ("GPT 호출 오류" + e.getMessage());
 
         }
 

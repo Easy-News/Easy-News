@@ -21,38 +21,7 @@ import java.util.List;
 public class SummaryGptService {
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
-//
-//    @Value("${openai.api.key}")
-//    private String apiKey;
-//
-//    @Value("${openai.api.url}")
-//    private String apiUrl;
 
-//    public String summarize(String content) {
-//        String prompt = "Summarize the following news article in one sentence:\n\n" + content;
-//
-//        GptResponseDto response = chat("gpt-3.5-turbo", prompt, apiUrl);
-//        return response.getChoices().get(0).getMessage().getContent().trim();
-//    }
-
-/*    public GptResponseDto models() {
-        String url = "https://api.openai.com/v1/models";
-
-        // HTTP 헤더 설정
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> entity = new HttpEntity<>(null, headers);
-        ResponseEntity<String> response = restTemplate.exchange(
-                url, HttpMethod.GET, entity, String.class);
-
-        GptResponseDto gptModelsResponseDto = null;
-        try {
-            gptModelsResponseDto = objectMapper.readValue(response.getBody(), GptResponseDto.class);
-        } catch (JsonProcessingException e) {
-            log.error("Error parsing response from OpenAI Server", e);
-        }
-        return gptModelsResponseDto;
-    }*/
 
     public GptResponseDto chat(String model, String endpointCharged) {
         StringBuilder prompt = new StringBuilder();
