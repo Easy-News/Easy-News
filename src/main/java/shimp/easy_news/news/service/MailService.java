@@ -10,8 +10,6 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import shimp.easy_news.news.dto.MailRequest;
-import shimp.easy_news.user.domain.User;
 import shimp.easy_news.user.repository.UserRepository;
 
 @Service
@@ -51,12 +49,6 @@ public class MailService {
 
 
     public void sendEmail(String email, String summary) {
-
-//        User findUser = userRepository.findByEmail(email);
-        log.info("여기 이메일 email: {}", email);
-//        if (findUser == null) {
-//            throw new IllegalArgumentException("실패");
-//        }
 
         MimeMessage message = createMail(email, summary);
         javaMailSender.send(message);

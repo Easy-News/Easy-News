@@ -24,7 +24,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SummaryGptService {
     private final RestTemplate restTemplate;
-    private final ObjectMapper objectMapper;
     private final NewsRepository newsRepository;
 
     public GptResponseDto chat(String model, String endpointCharged) {
@@ -35,7 +34,7 @@ public class SummaryGptService {
 
         StringBuilder prompt = new StringBuilder();
         prompt.append("당신은 신문 기사 내용을 빠르게 요약해주는 AI입니다. ")
-                .append("다음 사용자의 요청에 따라 1개의 뉴스 본문을 각각의 기사마다 한 줄로 요약해주세요. ");
+                .append("다음 사용자의 요청에 따라 5개의 뉴스 본문을 각각의 기사마다 한 줄로 요약해주세요. ");
         for (SummaryRequest news : newsList) {
             prompt.append("title: ").append(news.title()).append("\n")
                     .append("content: ").append(news.content()).append("\n\n");
@@ -45,7 +44,7 @@ public class SummaryGptService {
 
         log.info(prompt.toString());
         List<Message> prompts = List.of(new Message("user", prompt.toString()));
-        GptRequestDto request = new GptRequestDto(model, prompts, 1, 1024, 1, 0, 0);
+        GptRequestDto request = new GptRequestDto(model, prompts, 1, 256, 1, 0, 0);
 
         // HTTP 헤더 설정
         HttpHeaders headers = new HttpHeaders();
