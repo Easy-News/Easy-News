@@ -16,6 +16,9 @@ import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import shimp.easy_news.news.constant.Category;
+import shimp.easy_news.news.constant.SubCategory;
+
+import java.time.LocalTime;
 
 @Entity
 @Getter
@@ -36,7 +39,7 @@ public class User {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "interested", nullable = false)
+    @Column(name = "interested", nullable = false, length = 100)
     @Enumerated(value = EnumType.STRING)
     private Category interested;
 
@@ -46,8 +49,15 @@ public class User {
     @Column(name = "nickname")
     private String nickname;
 
+    @Column(name = "mailing_time")
+    private LocalTime mailingTime;
+
+    @Column(name = "sent_today")
+    private boolean sentToday = false;
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private UserClicks userClicks;
+
 
     /**
      * UserClicks 양방향 관계 설정
@@ -162,5 +172,12 @@ public class User {
         if (interested != null) {
             this.interested = interested;
         }
+    }
+
+    /**
+     * 이메일 발송 여부를 true로 설정
+     */
+    public void markAsSentToday() {
+        this.sentToday = true;
     }
 }
