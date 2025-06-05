@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>이지뉴스 홈</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            color: #333;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* ─────────── HEADER ─────────── */
+        header.header-bar {
+            background-color: #B3E5FC;  /* 파스텔톤 블루 */
+        }
+        /* 타이틀 */
+        header.header-bar .logo {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            padding: 12px 0 4px;
+        }
+        /* 네비게이션: 위/아래 패딩을 키워서 내부 요소(특히 .user a)를 충분히 감싸도록 함 */
+        header.header-bar .header-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 16px 20px;    /* 충분한 위/아래 패딩 */
+            background: #fff;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+        }
+        header.header-bar .header-nav .categories a {
+            margin-right: 20px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        header.header-bar .header-nav .categories a:last-child {
+            margin-right: 0;
+        }
+        header.header-bar .header-nav .user a {
+            font-size: 16px;
+            padding: 6px 12px;
+            border: 2px solid #333;
+            border-radius: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100px;
+        }
+
+        /* ────────── MAIN CONTENT ────────── */
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            background: #fff;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .section-header {
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            padding: 8px 12px;
+            font-size: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .article {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+        .article img {
+            width: 200px;
+            height: 120px;
+            object-fit: cover;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            margin-right: 20px;
+        }
+        .article .content {
+            flex: 1;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            padding: 12px;
+        }
+        .article .content h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        .article .content p {
+            margin: 0;
+            line-height: 1.4;
+            font-size: 14px;
+        }
+        .divider {
+            border-top: 1px dashed #ccc;
+            margin: 40px 0;
+        }
+    </style>
+</head>
+<body>
+
+<header class="header-bar">
+    <div class="logo">이지뉴스</div>
+    <nav class="header-nav">
+        <div class="categories">
+            <a href="#">정치</a>
+            <a href="#">경제</a>
+            <a href="#">사회</a>
+            <a href="#">IT/과학</a>
+            <a href="#">세계</a>
+        </div>
+        <div class="user">
+            <a href="#">홍길동</a>
+        </div>
+    </nav>
+</header>
+
+<div class="container">
+    <!-- 개인화 추천 -->
+    <div class="section-header">개인화 추천</div>
+    <div class="article">
+        <img src="https://via.placeholder.com/200x120" alt="추천 기사 사진">
+        <div class="content">
+            <h3>추천 기사 제목</h3>
+            <p>여기에 개인화된 추천 기사 요약 텍스트가 들어갑니다. 사용자의 관심사에 맞춘 콘텐츠를 보여줍니다.</p>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 헤드라인 -->
+    <div class="section-header">헤드라인</div>
+    <div class="article">
+        <img src="https://via.placeholder.com/200x120" alt="헤드라인 사진">
+        <div class="content">
+            <h3>헤드라인 기사 1</h3>
+            <p>헤드라인 1의 요약 내용이 여기에 들어갑니다. 주요 뉴스 헤드라인을 간략히 보여줍니다.</p>
+        </div>
+    </div>
+    <div class="article">
+        <img src="https://via.placeholder.com/200x120" alt="헤드라인 사진">
+        <div class="content">
+            <h3>헤드라인 기사 2</h3>
+            <p>헤드라인 2의 요약 내용이 여기에 들어갑니다. 주요 뉴스 헤드라인을 간략히 보여줍니다.</p>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 실시간 뉴스 -->
+    <div class="section-header">실시간 뉴스</div>
+    <div class="article">
+        <img src="https://via.placeholder.com/200x120" alt="실시간 뉴스 사진">
+        <div class="content">
+            <h3>실시간 뉴스 제목</h3>
+            <p>실시간으로 업데이트되는 뉴스 요약이 이곳에 표시됩니다. 최신 정보를 빠르게 제공합니다.</p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

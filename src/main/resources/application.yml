@@ -1,0 +1,67 @@
+spring:
+  profiles:
+    include:
+      - "default"
+      - "mysql" #원하는 profile 활성화 시키기
+---
+spring:
+  config:
+    activate:
+      on-profile: "default"
+  application:
+    name: "easy-news"
+---
+spring:
+  config:
+    activate:
+      on-profile: "h2db"
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
+      path: /h2-console
+  datasource:
+    url: jdbc:h2:mem:test;mode=mysql  # inmemory mode실행 및 mysql 모드로 실행
+    #    url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1; mode=mysql
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    database: h2  # 알아서 해줘서 해줄 필요 없긴 함
+    hibernate:
+      ddl-auto: create-drop # 매 실행시 db create & 서버 종료시 db drop
+    defer-datasource-initialization: true
+    show-sql: true
+---
+spring:
+  config:
+    activate:
+      on-profile: "mysql"
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${MYSQL_URL}
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+  jpa:
+    database: mysql
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+openai:
+  api-key: ${GPT_API_KEY}
+  model: gpt-4o-mini
+  url: https://api.openai.com/v1/chat/completions
