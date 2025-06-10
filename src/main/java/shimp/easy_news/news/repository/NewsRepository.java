@@ -3,6 +3,7 @@ package shimp.easy_news.news.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import shimp.easy_news.news.constant.NewsType;
 import shimp.easy_news.news.constant.SubCategory;
 import shimp.easy_news.news.domain.News;
 
@@ -13,4 +14,6 @@ public interface NewsRepository extends JpaRepository<News, Long> {
     SubCategory findSubCategoryById(@Param("id") Long id);
 
     List<News> findTop10BySubCategoryOrderByCreatedAtDesc(SubCategory subCategory);
+
+    List<News> findTop10ByNewsTypeOrderByCreatedAtDesc(NewsType newsType);
 }
