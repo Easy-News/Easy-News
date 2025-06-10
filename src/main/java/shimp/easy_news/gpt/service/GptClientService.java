@@ -64,5 +64,35 @@ public class GptClientService {
                 .map(res -> res.getChoices().get(0).getMessage().getContent().trim())
                 .orElse("GPT 응답이 없습니다.");
     }
+
+    public String callSummaryGpt(String combinedNewsText, SubCategory category, GptRole gptRole) {
+        // 1. 프롬프트 구성
+        String systemMessage = gptRole.getSystemMessage();
+        String userPrompt = gptRole.formatUserPrompt(category.name(), combinedNewsText);
+
+        List<ChatMessageDto> messages = List.of(
+                new ChatMessageDto("system", systemMessage),
+                new ChatMessageDto("user", userPrompt.toString())
+        );
+
+        ChatReqDto request = new ChatReqDto(model, messages);
+
+        // 2. HTTP 요청 생성
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(apiKey);
+        HttpEntity<ChatReqDto> httpEntity = new HttpEntity<>(request, headers);
+
+        // 3. 요청 전송
+        ResponseEntity<ChatResDto> response = restTemplate.postForEntity(
+                apiUrl,
+                httpEntity,
+                ChatResDto.class
+        );
+
+        return Optional.ofNullable(response.getBody())
+                .map(res -> res.getChoices().get(0).getMessage().getContent().trim())
+                .orElse("GPT 응답이 없습니다.");
+    }
 }
 

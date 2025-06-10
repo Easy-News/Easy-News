@@ -2,10 +2,13 @@ package shimp.easy_news.news.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import shimp.easy_news.news.constant.NewsType;
 import shimp.easy_news.news.constant.SubCategory;
 import shimp.easy_news.news.domain.News;
 import shimp.easy_news.news.dto.NewsDescriptionResDto;
+import shimp.easy_news.news.dto.NewsSummaryResDto;
 import shimp.easy_news.news.repository.NewsRepository;
 
 import java.util.List;
@@ -38,5 +41,23 @@ public class NewsService {
     }
 
     // TODO : buildSummarization 구현
+    public NewsSummaryResDto buildSummaryData() {
+        List<News> latestNewsList = newsRepository.findTop10ByNewsTypeOrderByCreatedAtDesc(NewsType.HEADLINE);
+
+        StringBuilder summaryTargetBuilder = new StringBuilder();
+//        StringBuilder sourceListBuilder = new StringBuilder("출처:\n");
+
+        for (News news : latestNewsList) {
+            summaryTargetBuilder.append("제목: ").append(news.getTitle()).append("\n");
+            summaryTargetBuilder.append("본문: ").append(news.getContent()).append("\n\n");
+
+//            sourceListBuilder.append("- ").append(news.getArticleUrl()).append("\n");
+        }
+
+        return NewsSummaryResDto.builder()
+                .combinedNewsText(summaryTargetBuilder.toString())
+//                .sourceListText(sourceListBuilder.toString())
+                .build();
+    }
 
 }
