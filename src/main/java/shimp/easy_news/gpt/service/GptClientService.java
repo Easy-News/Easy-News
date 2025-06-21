@@ -11,6 +11,7 @@ import shimp.easy_news.gpt.constant.GptRole;
 import shimp.easy_news.gpt.dto.ChatMessageDto;
 import shimp.easy_news.gpt.dto.ChatReqDto;
 import shimp.easy_news.gpt.dto.ChatResDto;
+import shimp.easy_news.news.constant.Category;
 import shimp.easy_news.news.constant.SubCategory;
 import org.springframework.http.HttpHeaders;
 
@@ -32,7 +33,7 @@ public class GptClientService {
 
     private final RestTemplate restTemplate;
 
-    public String callDescriptionGpt(String combinedNewsText, SubCategory category, GptRole gptRole) {
+    public String callDescriptionGpt(String combinedNewsText, Category category, GptRole gptRole) {
 
         String systemMessage = gptRole.getSystemMessage();
         String userPrompt = gptRole.formatUserPrompt(category.name(), combinedNewsText);
@@ -65,7 +66,7 @@ public class GptClientService {
                 .orElse("GPT 응답이 없습니다.");
     }
 
-    public String callSummaryGpt(String combinedNewsText, SubCategory category, GptRole gptRole) {
+    public String callSummaryGpt(String combinedNewsText, Category category, GptRole gptRole) {
         // 1. 프롬프트 구성
         String systemMessage = gptRole.getSystemMessage();
         String userPrompt = gptRole.formatUserPrompt(category.name(), combinedNewsText);

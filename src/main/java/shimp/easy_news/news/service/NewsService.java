@@ -2,10 +2,9 @@ package shimp.easy_news.news.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import shimp.easy_news.news.constant.Category;
 import shimp.easy_news.news.constant.NewsType;
-import shimp.easy_news.news.constant.SubCategory;
 import shimp.easy_news.news.domain.News;
 import shimp.easy_news.news.dto.NewsDescriptionResDto;
 import shimp.easy_news.news.dto.NewsSummaryResDto;
@@ -20,10 +19,10 @@ public class NewsService {
 
     private final NewsRepository newsRepository;
 
-    public NewsDescriptionResDto buildDescriptionDataBySubCategory(SubCategory subCategory) {
+    public NewsDescriptionResDto buildDescriptionDataByCategory(Category category) {
 
         // 1. 뉴스 가져오기
-        List<News> latestNewsList = newsRepository.findTop10BySubCategoryOrderByCreatedAtDesc(subCategory);
+        List<News> latestNewsList = newsRepository.findTop10ByCategoryOrderByCreatedAtDesc(category);
 
         StringBuilder newsContextBuilder = new StringBuilder();
         StringBuilder sourceListBuilder = new StringBuilder("출처:\n");

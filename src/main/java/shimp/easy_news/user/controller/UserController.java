@@ -1,6 +1,7 @@
 package shimp.easy_news.user.controller;
 
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,14 +15,10 @@ import shimp.easy_news.user.domain.UserClicks;
 
 @Controller
 @Slf4j
+@RequiredArgsConstructor
 public class UserController {
 
     private final UserRepository userRepository;
-
-    @Autowired
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     @GetMapping("/signup")
     public String showSignupForm(Model model) {
@@ -32,6 +29,10 @@ public class UserController {
     @PostMapping("/signup")
     public String processSignup(@ModelAttribute User user) {
         user.setUserClicks(UserClicks.ofZero());
+        System.out.println("username = " + user.getUsername());
+        System.out.println("password = " + user.getPassword());
+        System.out.println("email = " + user.getEmail());
+        System.out.println("category = " + user.getInterested());
         userRepository.save(user);
         return "redirect:/login";
     }
