@@ -15,6 +15,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+import shimp.easy_news.news.constant.Category;
 import shimp.easy_news.news.constant.SubCategory;
 
 import java.time.LocalTime;
@@ -38,9 +39,9 @@ public class User {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "interested", nullable = false)
+    @Column(name = "interested", nullable = false, length = 100)
     @Enumerated(value = EnumType.STRING)
-    private SubCategory interested;
+    private Category interested;
 
     @Column(name = "password", nullable = false)
     private String password;
@@ -51,11 +52,12 @@ public class User {
     @Column(name = "mailing_time")
     private LocalTime mailingTime;
 
+    @Column(name = "sent_today")
+    private boolean sentToday = false;
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private UserClicks userClicks;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private UserEmailSchedule userEmailSchedule;
 
     /**
      * UserClicks 양방향 관계 설정
@@ -73,11 +75,6 @@ public class User {
         if (userClicks != null && userClicks.getUser() != this) {
             userClicks.setUser(this);
         }
-    }
-
-    public void setUserEmailSchedule(UserEmailSchedule schedule) {
-        this.userEmailSchedule = schedule;
-        schedule.setUser(this); // 양방향 연결
     }
 
     /**
@@ -168,12 +165,19 @@ public class User {
      * @param nickname 새로운 닉네임
      * @param interested 새로운 관심 카테고리
      */
-    public void updateProfile(String nickname, SubCategory interested) {
+    public void updateProfile(String nickname, Category interested) {
         if (nickname != null && !nickname.trim().isEmpty()) {
             this.nickname = nickname.trim();
         }
         if (interested != null) {
             this.interested = interested;
         }
+    }
+
+    /**
+     * 이메일 발송 여부를 true로 설정
+     */
+    public void markAsSentToday() {
+        this.sentToday = true;
     }
 }

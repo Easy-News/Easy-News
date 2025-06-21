@@ -39,7 +39,8 @@
         }
         .signup-form input[type="text"],
         .signup-form input[type="password"],
-        .signup-form input[type="email"] {
+        .signup-form input[type="email"],
+        .signup-form input[type="time"] { /* 시간 입력 필드 스타일 추가 */
             width: 100%;
             padding: 10px;
             margin-bottom: 15px;
@@ -105,6 +106,8 @@
     <label for="nickname">닉네임</label>
     <input type="text" th:field="*{nickname}" placeholder="닉네임을 입력하세요" required />
 
+    <label for="mailingTime">메일 수신 시간</label>
+    <input type="time" th:field="*{mailingTime}" required />
     <fieldset class="category-fieldset">
         <legend>관심 카테고리</legend>
         <div class="checkbox-group">

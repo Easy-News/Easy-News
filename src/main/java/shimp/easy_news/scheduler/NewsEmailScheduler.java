@@ -5,49 +5,51 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import shimp.easy_news.gpt.constant.GptRole;
 import shimp.easy_news.gpt.service.GptClientService;
+import shimp.easy_news.news.constant.Category;
 import shimp.easy_news.news.constant.SubCategory;
 import shimp.easy_news.news.dto.NewsDescriptionResDto;
 import shimp.easy_news.news.dto.NewsSummaryResDto;
 import shimp.easy_news.news.service.NewsEmailService;
 import shimp.easy_news.news.service.NewsService;
 import shimp.easy_news.user.domain.User;
-import shimp.easy_news.user.domain.UserEmailSchedule;
-import shimp.easy_news.user.repository.UserEmailScheduleRepository;
+import shimp.easy_news.user.repository.UserRepository;
 
 import java.time.LocalTime;
+
+import static shimp.easy_news.news.constant.SubCategory.IT_AND_SCIENCE_TECHNOLOGY;
 
 @Component
 @RequiredArgsConstructor
 public class NewsEmailScheduler {
 
-    private final UserEmailScheduleRepository userEmailScheduleRepository;
     private final NewsService newsService;
     private final GptClientService gptClientService;
     private final NewsEmailService emailService;
+    private final UserRepository userRepository;
 
     @Scheduled(cron = "0 * * * * *")
     public void sendScheduledNewsEmails() {
 
-//        LocalTime now = LocalTime.parse("03:40:00");
-        LocalTime now = LocalTime.now().withSecond(0).withNano(0);
-        UserEmailSchedule schedule = userEmailScheduleRepository.findByScheduledTimeAndSentTodayFalse(now);
+        LocalTime now = LocalTime.of(3, 40, 0);
+//        LocalTime now = LocalTime.now().withSecond(0).withNano(0);
+        User user = userRepository.findByMailingTimeAndSentTodayFalse(now);
 
-        User user = schedule.getUser();
-        SubCategory subCategory = schedule.getSubCategory();
+        Category category = Category.IT_SCIENCE;
+//        SubCategory subCategory = SubCategory.valueOf(user.getMostInterestedCategory());
 
         // 1. 뉴스 가져오기 (설명, 요약)
-        NewsDescriptionResDto newsDescriptionResDto = newsService.buildDescriptionDataBySubCategory(subCategory);
+        NewsDescriptionResDto newsDescriptionResDto = newsService.buildDescriptionDataByCategory(category);
         NewsSummaryResDto newsSummaryResDto = newsService.buildSummaryData();
 
         // 2. GPT에 한 번에 전달
         String explanation = gptClientService.callDescriptionGpt(
                 newsDescriptionResDto.getCombinedNewsText(),
-                subCategory,
+                category,
                 GptRole.EXPLANATION
         );
         String summary = gptClientService.callSummaryGpt(
                 newsSummaryResDto.getCombinedNewsText(),
-                subCategory,
+                category,
                 GptRole.SUMMARY);
 
         // 3. 이메일 전송
@@ -59,11 +61,7 @@ public class NewsEmailScheduler {
         );
 
         // 4. 전송 처리
-        UserEmailSchedule.builder()
-                .sentToday(true)
-                .build();
-
-        userEmailScheduleRepository.save(schedule);
+        user.markAsSentToday();
     }
 }
 
