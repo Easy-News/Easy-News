@@ -6,12 +6,19 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shimp.easy_news.news.constant.NewsType;
+import shimp.easy_news.news.constant.SubCategory;
 import shimp.easy_news.news.domain.News;
 import shimp.easy_news.news.repository.NewsRepository;
+import shimp.easy_news.user.domain.User;
+import shimp.easy_news.user.domain.UserClicks;
 import shimp.easy_news.user.dto.HomeNewsResponse;
 import shimp.easy_news.user.dto.NewsDto;
 import org.springframework.data.domain.Pageable;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,20 +28,67 @@ public class NewsCheckService {
 
     private final NewsRepository newsRepository;
 
-    public HomeNewsResponse getHomeNews(int page, int size) {
+    public HomeNewsResponse getHomeNews(int page, int size, User user) {
         return HomeNewsResponse.builder()
-//                .personalizedNews(getPersonalizedNews(userId, size))
+                .personalizedNews(getPersonalizedNews(user, size))
                 .headlineNews(getHeadlineNews(size))
                 .realTimeNews(getRealTimeNews(size))
                 .build();
     }
-//
-//    private List<NewsDto> getPersonalizedNews(String userId, int size) {
-//        // 개인화 로직 (현재는 임시로 최신 뉴스 반환)
-//        Pageable pageable = PageRequest.of(0, size, Sort.by("createdAt").descending());
-//        List<News> newsList = newsRepository.findByNewsType(NewsType.PERSONALIZED, pageable);
-//        return convertToDto(newsList);
-//    }
+
+    private List<NewsDto> getPersonalizedNews(User user, int size) {
+        if (user == null || user.getUserClicks() == null) {
+            // 비로그인 사용자는 최신 뉴스 반환
+            Pageable pageable = PageRequest.of(0, size, Sort.by("createdAt").descending());
+            List<News> newsList = newsRepository.findByNewsType(NewsType.HEADLINE, pageable);
+            return convertToDto(newsList);
+        }
+
+        // 사용자 클릭 데이터 기반으로 선호 카테고리 분석
+        List<SubCategory> preferredCategories = analyzeUserPreferences(user.getUserClicks());
+
+        // 선호 카테고리 기반 뉴스 조회
+        Pageable pageable = PageRequest.of(0, size, Sort.by("createdAt").descending());
+        List<News> personalizedNews = newsRepository.findBySubCategoryInOrderByCreatedAtDesc(
+                preferredCategories, pageable);
+
+        return convertToDto(personalizedNews);
+    }
+
+    private List<SubCategory> analyzeUserPreferences(UserClicks userClicks) {
+        List<SubCategory> preferences = new ArrayList<>();
+
+        Map<SubCategory, Integer> clickCounts = new HashMap<>();
+
+        clickCounts.put(SubCategory.DOMESTIC_POLITICS, userClicks.getDomestic_politics_clicks());
+        clickCounts.put(SubCategory.ELECTION_AND_PRESIDENTIAL, userClicks.getElection_and_presidential_clicks());
+        clickCounts.put(SubCategory.INTERNATIONAL_POLITICS_AND_DIPLOMACY, userClicks.getInternational_politics_and_diplomacy_clicks());
+        clickCounts.put(SubCategory.ECONOMIC_POLICY, userClicks.getEconomic_policy_clicks());
+        clickCounts.put(SubCategory.CORPORATE_AND_INDUSTRY_TRENDS, userClicks.getCorporate_and_industry_trends_clicks());
+        clickCounts.put(SubCategory.FINANCE_AND_SECURITIES, userClicks.getFinance_and_securities_clicks());
+        clickCounts.put(SubCategory.IT_AND_SCIENCE_TECHNOLOGY, userClicks.getIt_and_science_technology_clicks());
+        clickCounts.put(SubCategory.TELECOMMUNICATION_AND_MOBILE, userClicks.getTelecommunication_and_mobile_clicks());
+        clickCounts.put(SubCategory.SOCIETY_AND_WELFARE, userClicks.getSociety_and_welfare_clicks());
+        clickCounts.put(SubCategory.INCIDENT_AND_ACCIDENT, userClicks.getIncident_and_accident_clicks());
+        clickCounts.put(SubCategory.LEGAL_AND_SECURITY, userClicks.getLegal_and_security_clicks());
+        clickCounts.put(SubCategory.ENVIRONMENT_AND_CLIMATE, userClicks.getEnvironment_and_climate_clicks());
+        clickCounts.put(SubCategory.CULTURE_AND_ART, userClicks.getCulture_and_art_clicks());
+        clickCounts.put(SubCategory.ENTERTAINMENT_AND_BROADCASTING, userClicks.getEntertainment_and_broadcasting_clicks());
+        clickCounts.put(SubCategory.SPORTS, userClicks.getSports_clicks());
+        clickCounts.put(SubCategory.HEALTH_AND_MEDICAL, userClicks.getHealth_and_medical_clicks());
+        clickCounts.put(SubCategory.EDUCATION_AND_ADMISSIONS, userClicks.getEducation_and_admissions_clicks());
+        clickCounts.put(SubCategory.REAL_ESTATE_AND_CONSTRUCTION, userClicks.getReal_estate_and_construction_clicks());
+        clickCounts.put(SubCategory.TRAVEL_AND_LEISURE, userClicks.getTravel_and_leisure_clicks());
+        clickCounts.put(SubCategory.COLUMN_AND_OPINION, userClicks.getColumn_and_opinion_clicks());
+
+
+        return clickCounts.entrySet().stream()
+                .filter(entry -> entry.getValue() > 0)
+                .sorted(Map.Entry.<SubCategory, Integer>comparingByValue().reversed())
+                .limit(5)
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+    }
 
     private List<NewsDto> getHeadlineNews(int size) {
         Pageable pageable = PageRequest.of(0, size, Sort.by("createdAt").descending());
@@ -65,7 +119,7 @@ public class NewsCheckService {
                 .newsId(news.getNewsId())
                 .title(news.getTitle())
                 .content(news.getContent())
-                .summary(extractSummary(news.getContent())) // 요약 추출
+                .summary(extractSummary(news.getContent()))
                 .category(news.getCategory())
                 .subCategory(news.getSubCategory())
                 .imageUrl(extractFirstImageUrl(news.getImageUrl()))
@@ -87,13 +141,10 @@ public class NewsCheckService {
             return null;
         }
 
-        // 따옴표 제거
         String cleanUrl = imageUrl.replace("\"", "").trim();
 
-        // 여러 URL이 있는 경우 첫 번째만 선택 (줄바꿈, 쉼표, 공백으로 구분)
+        // 여러 URL이 있는 경우 첫 번째만 선택
         String[] urls = cleanUrl.split("[\\n\\r,\\s]+");
-
-        // 첫 번째 유효한 URL 반환
         for (String url : urls) {
             url = url.trim();
             if (!url.isEmpty() && (url.startsWith("http://") || url.startsWith("https://"))) {

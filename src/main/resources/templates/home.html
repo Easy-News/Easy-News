@@ -166,7 +166,12 @@
             <img th:src="${news.imageUrl != null ? news.imageUrl : '/emptyImg.png'}"
                  th:alt="${news.title + ' 사진'}">
             <div class="content">
-                <h3 th:text="${news.title}">헤드라인 기사 제목</h3>
+                <h3>
+                    <a th:href="${news.articleUrl}"
+                       th:text="${news.title}"
+                       th:onclick="'recordClick(' + ${news.newsId} + ')'"
+                       target="_blank">헤드라인 기사 제목</a>
+                </h3>
                 <p th:text="${news.summary != null ? news.summary : news.content}">
                     헤드라인 기사 요약 내용이 여기에 들어갑니다. 주요 뉴스 헤드라인을 간략히 보여줍니다.
                 </p>
@@ -196,7 +201,7 @@
     <div class="section-header">실시간 뉴스</div>
     <div th:if="${realTimeNews != null and !realTimeNews.isEmpty()}">
         <div class="article" th:each="news : ${realTimeNews}">
-            <img th:src="${news.imageUrl != null ? news.imageUrl : 'https://via.placeholder.com/200x120'}"
+            <img th:src="${news.imageUrl != null ? news.imageUrl : '/emptyImg.png'}"
                  th:alt="${news.title + ' 사진'}">
             <div class="content">
                 <h3 th:text="${news.title}">실시간 뉴스 제목</h3>
@@ -216,6 +221,18 @@
         </div>
     </div>
 </div>
+
+<script>
+    function recordClick(newsId) {
+        fetch('/news/click', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'newsId=' + newsId
+        });
+    }
+</script>
 
 </body>
 </html>

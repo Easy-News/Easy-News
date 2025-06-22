@@ -3,12 +3,13 @@ package shimp.easy_news.user.controller;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import shimp.easy_news.news.constant.SubCategory;
+import shimp.easy_news.news.domain.News;
+import shimp.easy_news.news.repository.NewsRepository;
 import shimp.easy_news.user.dto.HomeNewsResponse;
 import shimp.easy_news.user.repository.UserRepository;
 import shimp.easy_news.user.domain.User;
@@ -24,6 +25,7 @@ import java.util.List;
 public class UserController {
 
     private final UserRepository userRepository;
+    private final NewsRepository newsRepository;
     private final NewsCheckService newsService;
 
     @GetMapping("/signup")
@@ -65,9 +67,19 @@ public class UserController {
 
     @GetMapping("/home")
     public String home(Model model,
+                       HttpSession session,
                        @RequestParam(defaultValue = "5") int size) {
 
-        HomeNewsResponse homeNews = newsService.getHomeNews(0, size);
+        User loginUser = (User) session.getAttribute("loginUser");
+        HomeNewsResponse homeNews;
+
+        if (loginUser != null) {
+            homeNews = newsService.getHomeNews(0, size, loginUser);
+            model.addAttribute("userName", loginUser.getUsername());
+        }else{
+            homeNews = newsService.getHomeNews(0,size,null);
+            model.addAttribute("userName", "게스트");
+        }
 
         NewsCheckForm newsCheckForm = new NewsCheckForm();
         newsCheckForm.setSize(size);
@@ -79,6 +91,97 @@ public class UserController {
 
         return "home";
     }
+
+    @PostMapping("/news/click")
+    @ResponseBody
+    public ResponseEntity<String> recordNewsClick(@RequestParam Long newsId,
+                                                  HttpSession session) {
+        User loginUser = (User) session.getAttribute("loginUser");
+        if (loginUser != null) {
+            News news = newsRepository.findById(newsId).orElse(null);
+            if (news != null) {
+                // SubCategory 에 따라 해당 클릭 수 증가
+                updateUserClicks(loginUser, news.getSubCategory());
+            }
+        }
+        return ResponseEntity.ok("success");
+    }
+
+    private void updateUserClicks(User user, SubCategory subCategory) {
+        UserClicks userClicks = user.getUserClicks();
+
+        switch (subCategory) {
+            case DOMESTIC_POLITICS:
+                userClicks.incrementDomestic_politics_clicks();
+                break;
+            case ELECTION_AND_PRESIDENTIAL:
+                userClicks.incrementElection_and_presidential_clicks();
+                break;
+            case INTERNATIONAL_POLITICS_AND_DIPLOMACY:
+                userClicks.incrementInternational_politics_and_diplomacy_clicks();
+                break;
+            case ECONOMIC_POLICY:
+                userClicks.incrementEconomic_policy_clicks();
+                break;
+            case CORPORATE_AND_INDUSTRY_TRENDS:
+                userClicks.incrementCorporate_and_industry_trends_clicks();
+                break;
+            case FINANCE_AND_SECURITIES:
+                userClicks.incrementFinance_and_securities_clicks();
+                break;
+            case IT_AND_SCIENCE_TECHNOLOGY:
+                userClicks.incrementIt_and_science_technology_clicks();
+                break;
+            case TELECOMMUNICATION_AND_MOBILE:
+                userClicks.incrementTelecommunication_and_mobile_clicks();
+                break;
+            case SOCIETY_AND_WELFARE:
+                userClicks.incrementSociety_and_welfare_clicks();
+                break;
+            case INCIDENT_AND_ACCIDENT:
+                userClicks.incrementIncident_and_accident_clicks();
+                break;
+            case LEGAL_AND_SECURITY:
+                userClicks.incrementLegal_and_security_clicks();
+                break;
+            case ENVIRONMENT_AND_CLIMATE:
+                userClicks.incrementEnvironment_and_climate_clicks();
+                break;
+            case CULTURE_AND_ART:
+                userClicks.incrementCulture_and_art_clicks();
+                break;
+            case ENTERTAINMENT_AND_BROADCASTING:
+                userClicks.incrementEntertainment_and_broadcasting_clicks();
+                break;
+            case SPORTS:
+                userClicks.incrementSports_clicks();
+                break;
+            case HEALTH_AND_MEDICAL:
+                userClicks.incrementHealth_and_medical_clicks();
+                break;
+            case EDUCATION_AND_ADMISSIONS:
+                userClicks.incrementEducation_and_admissions_clicks();
+                break;
+            case REAL_ESTATE_AND_CONSTRUCTION:
+                userClicks.incrementReal_estate_and_construction_clicks();
+                break;
+            case TRAVEL_AND_LEISURE:
+                userClicks.incrementTravel_and_leisure_clicks();
+                break;
+            case COLUMN_AND_OPINION:
+                userClicks.incrementColumn_and_opinion_clicks();
+                break;
+            default:
+                // 알 수 없는 카테고리인 경우 로그 출력
+                System.out.println("Unknown SubCategory: " + subCategory);
+                break;
+        }
+
+        System.out.println("SubCategory: " + subCategory);
+
+        userRepository.save(user); // 변경사항 저장
+    }
+
 
     // Login form backing object
     public static class LoginForm {

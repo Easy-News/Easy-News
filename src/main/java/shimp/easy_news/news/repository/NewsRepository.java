@@ -21,10 +21,5 @@ public interface NewsRepository extends JpaRepository<News, Long> {
 
     List<News> findByNewsType(NewsType newsType, Pageable pageable);
 
-    List<News> findByCategory(Category category, Pageable pageable);
-
-    List<News> findByCreatedAtOrderByCreatedAtDesc(LocalDate date, Pageable pageable);
-
-    @Query("SELECT n FROM News n WHERE n.createdAt = :today ORDER BY n.createdAt DESC")
-    List<News> findTodayNews(@Param("today") LocalDate today, Pageable pageable);
+    List<News> findBySubCategoryInOrderByCreatedAtDesc(List<SubCategory> subCategories, Pageable pageable);
 }
