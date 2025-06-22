@@ -46,7 +46,7 @@ spring:
   jpa:
     database: mysql
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: true
 
   mail:
