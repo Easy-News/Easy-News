@@ -8,10 +8,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestParam;
+import shimp.easy_news.user.dto.HomeNewsResponse;
 import shimp.easy_news.user.repository.UserRepository;
 import shimp.easy_news.user.domain.User;
 import shimp.easy_news.user.domain.UserClicks;
+import shimp.easy_news.user.service.NewsCheckService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @Slf4j
@@ -19,6 +24,7 @@ import shimp.easy_news.user.domain.UserClicks;
 public class UserController {
 
     private final UserRepository userRepository;
+    private final NewsCheckService newsService;
 
     @GetMapping("/signup")
     public String showSignupForm(Model model) {
@@ -58,7 +64,19 @@ public class UserController {
     }
 
     @GetMapping("/home")
-    public String hello() {
+    public String home(Model model,
+                       @RequestParam(defaultValue = "5") int size) {
+
+        HomeNewsResponse homeNews = newsService.getHomeNews(0, size);
+
+        NewsCheckForm newsCheckForm = new NewsCheckForm();
+        newsCheckForm.setSize(size);
+
+        model.addAttribute("newsCheckForm", newsCheckForm);
+        model.addAttribute("personalizedNews", homeNews.getPersonalizedNews());
+        model.addAttribute("headlineNews", homeNews.getHeadlineNews());
+        model.addAttribute("realTimeNews", homeNews.getRealTimeNews());
+
         return "home";
     }
 
@@ -80,4 +98,40 @@ public class UserController {
             this.password = password;
         }
     }
+
+    public static class NewsCheckForm {
+        private List<Long> selectedNewsIds;
+        private String category;
+        private int size;
+
+        public NewsCheckForm() {
+            this.selectedNewsIds = new ArrayList<>();
+            this.size = 5;
+        }
+
+        public List<Long> getSelectedNewsIds() {
+            return selectedNewsIds;
+        }
+
+        public void setSelectedNewsIds(List<Long> selectedNewsIds) {
+            this.selectedNewsIds = selectedNewsIds;
+        }
+
+        public String getCategory() {
+            return category;
+        }
+
+        public void setCategory(String category) {
+            this.category = category;
+        }
+
+        public int getSize() {
+            return size;
+        }
+
+        public void setSize(int size) {
+            this.size = size;
+        }
+    }
+
 }
