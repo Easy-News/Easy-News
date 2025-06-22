@@ -8,5 +8,5 @@ import shimp.easy_news.user.domain.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsername(String username);
-    User findByMailingTimeAndSentTodayFalse(LocalTime mailingTime);
+    Optional<User> findByMailingTimeAndSentTodayFalse(LocalTime mailingTime);
 }
