@@ -1,12 +1,12 @@
 package shimp.easy_news.scheduler;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import shimp.easy_news.gpt.constant.GptRole;
 import shimp.easy_news.gpt.service.GptClientService;
 import shimp.easy_news.news.constant.Category;
-import shimp.easy_news.news.constant.SubCategory;
 import shimp.easy_news.news.dto.NewsDescriptionResDto;
 import shimp.easy_news.news.dto.NewsSummaryResDto;
 import shimp.easy_news.news.service.NewsEmailService;
@@ -15,11 +15,12 @@ import shimp.easy_news.user.domain.User;
 import shimp.easy_news.user.repository.UserRepository;
 
 import java.time.LocalTime;
+import java.util.Optional;
 
-import static shimp.easy_news.news.constant.SubCategory.IT_AND_SCIENCE_TECHNOLOGY;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class NewsEmailScheduler {
 
     private final NewsService newsService;
@@ -30,12 +31,18 @@ public class NewsEmailScheduler {
     @Scheduled(cron = "0 * * * * *")
     public void sendScheduledNewsEmails() {
 
-        LocalTime now = LocalTime.of(3, 40, 0);
-//        LocalTime now = LocalTime.now().withSecond(0).withNano(0);
-        User user = userRepository.findByMailingTimeAndSentTodayFalse(now);
+//        LocalTime now = LocalTime.of(3, 40, 0);
+        LocalTime now = LocalTime.now().withSecond(0).withNano(0);
+        Optional<User> user = userRepository.findByMailingTimeAndSentTodayFalse(now);
 
-        Category category = Category.IT_SCIENCE;
-//        SubCategory subCategory = SubCategory.valueOf(user.getMostInterestedCategory());
+//        Category category = Category.IT_SCIENCE;
+
+        User u = user.orElse(null);
+        if (u == null) {
+            log.info("메일링 대상 사용자가 없습니다.");
+            return;
+        }
+        Category category = u.getInterested();
 
         // 1. 뉴스 가져오기 (설명, 요약)
         NewsDescriptionResDto newsDescriptionResDto = newsService.buildDescriptionDataByCategory(category);
@@ -55,13 +62,13 @@ public class NewsEmailScheduler {
         // 3. 이메일 전송
         String fullMailBody = summary + "\n\n" + explanation + "\n\n" + newsDescriptionResDto.getSourceListText();
         emailService.sendNewsEmail(
-                user.getEmail(),
-                "[Easy News] " + user.getNickname()+"님, 오늘의 뉴스 알려드립니다.",
+                user.get().getEmail(),
+                "[Easy News] " + user.get().getNickname()+"님, 오늘의 뉴스 알려드립니다.",
                 fullMailBody
         );
 
         // 4. 전송 처리
-        user.markAsSentToday();
+        user.get().markAsSentToday();
     }
 }
 

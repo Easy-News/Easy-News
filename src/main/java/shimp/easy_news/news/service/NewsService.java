@@ -21,7 +21,6 @@ public class NewsService {
 
     public NewsDescriptionResDto buildDescriptionDataByCategory(Category category) {
 
-        // 1. 뉴스 가져오기
         List<News> latestNewsList = newsRepository.findTop10ByCategoryOrderByCreatedAtDesc(category);
 
         StringBuilder newsContextBuilder = new StringBuilder();
