@@ -23,6 +23,7 @@ public class VisitLoggingInterceptor implements HandlerInterceptor {
                              HttpServletResponse response,
                              Object handler) {
         log.error("TEST");
+        log.error(request.getRequestURI());
         try {
             // GET 요청만 로깅 (POST 등은 제외)
             if (!"GET".equalsIgnoreCase(request.getMethod())) {
