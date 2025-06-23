@@ -23,20 +23,22 @@ public class VisitLoggingInterceptor implements HandlerInterceptor {
                              HttpServletResponse response,
                              Object handler) {
         log.error("TEST");
-        log.error(request.getRequestURI());
         try {
             // GET 요청만 로깅 (POST 등은 제외)
             if (!"GET".equalsIgnoreCase(request.getMethod())) {
+                log.info(request.getRequestURI());
                 return true;
             }
 
             HttpSession session = request.getSession(false);
             if (session == null) {
+                log.error("session is null");
                 return true;
             }
 
             User loginUser = (User) session.getAttribute("loginUser");
             if (loginUser == null) {
+                log.error("loginUser is null");
                 return true;
             }
 
