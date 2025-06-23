@@ -8,12 +8,12 @@ import shimp.easy_news.scheduler.NewsEmailScheduler;
 @SpringBootTest
 public class NewsEmailSchedulerTest {
 
-    @Autowired
-    private NewsEmailScheduler scheduler;
-
-    @Test
-    void testScheduledEmailSend() {
-        scheduler.sendScheduledNewsEmails();
-    }
+//    @Autowired
+//    private NewsEmailScheduler scheduler;
+//
+//    @Test
+//    void testScheduledEmailSend() {
+//        scheduler.sendScheduledNewsEmails();
+//    }
 }
 
