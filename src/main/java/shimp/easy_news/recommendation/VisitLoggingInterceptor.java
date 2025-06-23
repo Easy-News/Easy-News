@@ -50,10 +50,9 @@ public class VisitLoggingInterceptor implements HandlerInterceptor {
                 // 비동기로 로깅 처리하여 응답 성능에 영향 최소화
                 visitLogService.logVisit(loginUser.getUserId(), uri);
 
-                log.debug("방문 로그 비동기 처리 요청: 사용자 ID={}, URI={}",
+                log.warn("방문 로그 비동기 처리 요청: 사용자 ID={}, URI={}",
                         loginUser.getUserId(), uri);
             }
-            log.warn("FUCK");
 
         } catch (Exception e) {
             log.error("VisitLoggingInterceptor에서 예외 발생", e);
