@@ -10,6 +10,8 @@ spring:
       on-profile: "default"
   application:
     name: "easy-news"
+server:
+  port: 1225
 ---
 spring:
   config:

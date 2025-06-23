@@ -99,7 +99,12 @@ jobs:
             
             # 새로운 이미지 풀 및 실행
             sudo docker pull ${{ secrets.DOCKER_REPO }}
-            sudo docker run -d --name easy_news_main -v /var/log/springboot:/var/log/springboot -p 1225:1225 ${{ secrets.DOCKER_REPO }}
+                        sudo docker run -d \
+              --name easy_news_main \
+              -v /var/log/springboot:/var/log/springboot \
+              -p 1225:1225 \
+              --network docker_mynet \
+              ${{ secrets.DOCKER_REPO }}
 
             # [추가됨] 사용하지 않는 도커 리소스 정리 (디스크 공간 확보)
             sudo docker system prune -af
