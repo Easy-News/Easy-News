@@ -114,7 +114,7 @@ public class NewsCheckService {
                 .collect(Collectors.toList());
     }
 
-    private NewsDto convertToDto(News news) {
+    public NewsDto convertToDto(News news) {
         return NewsDto.builder()
                 .newsId(news.getNewsId())
                 .title(news.getTitle())

@@ -1,5 +1,6 @@
 package shimp.easy_news.news.repository;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,4 +23,6 @@ public interface NewsRepository extends JpaRepository<News, Long> {
     List<News> findByNewsType(NewsType newsType, Pageable pageable);
 
     List<News> findBySubCategoryInOrderByCreatedAtDesc(List<SubCategory> subCategories, Pageable pageable);
+
+    Page<News> findByCategory(Category category, Pageable pageable);
 }

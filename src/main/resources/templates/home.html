@@ -120,17 +120,18 @@
     <div class="logo">이지뉴스</div>
     <nav class="header-nav">
         <div class="categories">
-            <a href="#">정치</a>
-            <a href="#">경제</a>
-            <a href="#">사회</a>
-            <a href="#">IT/과학</a>
-            <a href="#">세계</a>
+            <a th:href="@{/category/POLITIC}">정치</a>
+            <a th:href="@{/category/ECONOMY}">경제</a>
+            <a th:href="@{/category/SOCIAL}">사회</a>
+            <a th:href="@{/category/IT_SCIENCE}">IT/과학</a>
+            <a th:href="@{/category/GLOBALå}">세계</a>
         </div>
         <div class="user">
-            <a href="#" th:text="${userName}">홍길동</a>
+            <a href="#" th:text="${userName}">테스터</a>
         </div>
     </nav>
 </header>
+
 
 <div class="container">
     <!-- 개인화 추천 -->
