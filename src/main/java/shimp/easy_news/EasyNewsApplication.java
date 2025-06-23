@@ -11,11 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class EasyNewsApplication {
 
 	public static void main(String[] args) {
+		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
 		SpringApplication.run(EasyNewsApplication.class, args);
 	}
-
-	   @PostConstruct
-	   public void init() {
-	       TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
-	   }
 }
