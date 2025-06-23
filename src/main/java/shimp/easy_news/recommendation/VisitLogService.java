@@ -30,7 +30,6 @@ public class VisitLogService {
             }
 
             Long newsId = extractNewsIdFromUri(uri);
-            log.warn(newsId.toString());
             if (newsId == null) {
                 log.warn("뉴스 ID를 추출할 수 없습니다. URI: {}", uri);
                 return;
