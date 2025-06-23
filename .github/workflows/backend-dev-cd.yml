@@ -55,7 +55,7 @@ jobs:
             --build-arg MYSQL_URL=${{ secrets.MYSQL_URL }} \
             --build-arg MYSQL_USER=${{ secrets.MYSQL_USER }} \
             --platform linux/amd64,linux/arm64 \
-            -f ./infra/docker/Dockerfile \
+            -f ./infra/Dockerfile \
             -t ${{ secrets.DOCKER_REPO }} \
             --push \
             .
