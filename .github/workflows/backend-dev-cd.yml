@@ -82,7 +82,7 @@ jobs:
         id: deploy
         with:
           host: ${{ secrets.HOST }}
-          username: tony
+          username: root
           port: 1203
           key: ${{ secrets.KEY }}
           envs: GITHUB_SHA
