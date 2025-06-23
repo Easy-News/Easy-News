@@ -58,6 +58,7 @@ public class VisitLoggingInterceptor implements HandlerInterceptor {
                 log.debug("방문 로그 비동기 처리 요청: 사용자 ID={}, URI={}",
                         loginUser.getUserId(), uri);
             }
+            log.warn("FUCK");
 
         } catch (Exception e) {
             log.error("VisitLoggingInterceptor에서 예외 발생", e);
