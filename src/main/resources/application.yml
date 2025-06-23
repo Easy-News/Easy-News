@@ -50,7 +50,7 @@ spring:
     database: mysql
     hibernate:
       ddl-auto: none
-    show-sql: true
+#    show-sql: true
 
   mail:
     host: smtp.gmail.com

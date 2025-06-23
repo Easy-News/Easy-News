@@ -48,7 +48,6 @@ public class VisitLogService {
             }
 
             User user = userOptional.get();
-            log.warn(user.toString());
             // UserClicks가 없으면 생성 (User의 헬퍼 메서드 사용)
             UserClicks clicks = user.getOrCreateUserClicks();
 
@@ -61,10 +60,6 @@ public class VisitLogService {
 
             // UserClicks만 저장 (User는 이미 영속 상태)
             userClicksRepository.save(clicks);
-            log.warn("SAVED");
-
-            log.debug("사용자 ID: {}, 뉴스 ID: {}, 카테고리: {}에 대한 클릭이 기록되었습니다.",
-                    userId, newsId, subCategory);
 
         } catch (Exception e) {
             log.error("방문 로그 기록 중 오류 발생. 사용자 ID: {}, URI: {}", userId, uri, e);
