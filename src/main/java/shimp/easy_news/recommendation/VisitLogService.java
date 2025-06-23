@@ -25,7 +25,7 @@ public class VisitLogService {
     @Transactional
     public void logVisit(Long userId, String uri) {
         try {
-            if (uri == null || !uri.startsWith("/news/article/")) {
+            if (uri == null || !uri.startsWith("/article/")) {
                 return;
             }
 
