@@ -12,6 +12,8 @@ spring:
     name: "easy-news"
 server:
   port: 1225
+  servlet:
+    context-path: /news
 ---
 spring:
   config:
