@@ -58,7 +58,7 @@ jobs:
           # Docker 빌드 컨텍스트의 경로 (보통 현재 디렉토리)
           context: .
           # Dockerfile 경로 (경로가 정확한지 다시 한번 확인해주세요)
-          file: ./infra/docker/Dockerfile
+          file: ./infra/Dockerfile
           # 빌드 인자(args)를 여기에 전달
           build-args: |
             GPT_API_KEY=${{ secrets.GPT_API_KEY }}
