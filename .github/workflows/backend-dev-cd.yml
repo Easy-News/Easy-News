@@ -5,29 +5,95 @@ on:
     branches: [ "baePoYong" ]
 
 jobs:
-  test-login:
+  deploy:
     runs-on: ubuntu-latest
+    permissions:
+      write-all
+
+
     steps:
-      - name: '1. Check if Secrets are Accessible'
-        run: |
-          # Secret이 비어있는지 먼저 확인합니다.
-          if [ -z "${{ secrets.DOCKER_USERNAME }}" ]; then
-            echo "ERROR: DOCKER_USERNAME secret is not set or empty."
-            exit 1
-          fi
-          if [ -z "${{ secrets.DOCKER_PASSWORD }}" ]; then
-            echo "ERROR: DOCKER_PASSWORD secret is not set or empty."
-            exit 1
-          fi
-          echo "✅ Secrets are present. Proceeding to login..."
-          echo "Attempting to log in as user: ${{ secrets.DOCKER_USERNAME }}"
+      - uses: actions/checkout@v4
 
-      - name: '2. Login to Docker Hub'
-        # 가장 표준적이고 안정적인 Docker 공식 로그인 액션을 사용합니다.
-        uses: docker/login-action@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4.6.0
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          java-version: '17'
+          distribution: 'temurin'
 
-      - name: '3. Success Message'
-        run: echo "🎉 Docker Hub login was successful! The credentials are correct."
+        # Configure Gradle for optimal use in GiHub Actions, including caching of downloaded dependencies.
+        # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build with Gradle Wrapper
+        env:
+          GPT_API_KEY: ${{ secrets.GPT_API_KEY }}
+          GPT_API_URL: ${{ secrets.GPT_API_URL }}
+          MAIL_ADDRESS: ${{ secrets.MAIL_ADDRESS }}
+          MAIL_PASSWORD: ${{secrets.MAIL_PASSWORD}}
+          MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
+          MYSQL_URL: ${{secrets.MYSQL_URL}}
+          MYSQL_USER: ${{secrets.MYSQL_USER}}
+        run: ./gradlew build
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+        # dockerfile을 통해 이미지를 빌드하고, 이를 docker repo로 push
+      - name: Docker build & push to docker repo
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | sudo docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+          docker buildx build \
+            --build-arg GPT_API_KEY=${{ secrets.GPT_API_KEY }} \
+            --build-arg GPT_API_URL=${{ secrets.GPT_API_URL }} \
+            --build-arg MAIL_ADDRESS=${{ secrets.MAIL_ADDRESS }} \
+            --build-arg MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }} \
+            --build-arg MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }} \
+            --build-arg MYSQL_URL=${{ secrets.MYSQL_URL }} \
+            --build-arg MYSQL_USER=${{ secrets.MYSQL_USER }} \
+            --platform linux/amd64,linux/arm64 \
+            -f ./infra/Dockerfile \
+            -t ${{ secrets.DOCKER_REPO }} \
+            --push \
+            .
+
+      # appleboy/ssh-action@master 액션을 사용하여 지정한 서버에 ssh로 접속하고, script를 실행합니다.
+      # script의 내용은 도커의 기존 프로세스들을 제거하고, docker repo로부터 방금 위에서 push한 내용을 pull 받아 실행하는 것입니다.
+      # 실행 시, docker image만 빌드
+      - name: Deploy to server
+        uses: appleboy/ssh-action@v1.2.0
+        id: deploy
+        with:
+          host: ${{ secrets.HOST }}
+          username: tony
+          port: 1203
+          key: ${{ secrets.KEY }}
+          envs: GITHUB_SHA
+          script: |
+            echo "${{ secrets.DOCKER_PASSWORD }}" | sudo docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+            # 기존 컨테이너와 이미지를 정리
+            sudo docker stop easy_news_main
+            sudo docker rm easy_news_main
+            sudo docker rmi ${{ secrets.DOCKER_REPO }}
+            # 새로운 이미지 풀 및 실행
+            sudo docker pull ${{ secrets.DOCKER_REPO }}
+            sudo docker run -d --name easy_news_main -v /var/log/springboot:/var/log/springboot -p 1225:1225 ${{ secrets.DOCKER_REPO }}
+
+#      - name: Notify
+#        uses: actions/github-script@v7
+#        with:
+#          script: |
+#            github.rest.issues.createComment({
+#              issue_number: context.issue.number,
+#              owner: context.repo.owner,
+#              repo: context.repo.repo,
+#              body: '🌎 배포하였습니다.'
+#            })
+#
+#      - name: add label
+#        uses: actions-ecosystem/action-add-labels@v1
+#        with:
+#          labels: ":satellite: 자동 배포"
