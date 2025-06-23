@@ -48,13 +48,7 @@ public class VisitLoggingInterceptor implements HandlerInterceptor {
             log.info("uri:{}", uri);
             if (isLoggableUri(uri)) {
                 // 비동기로 로깅 처리하여 응답 성능에 영향 최소화
-                CompletableFuture.runAsync(() -> {
-                    try {
-                        visitLogService.logVisit(loginUser.getUserId(), uri);
-                    } catch (Exception e) {
-                        log.error("비동기 방문 로그 기록 중 오류 발생", e);
-                    }
-                });
+                visitLogService.logVisit(loginUser.getUserId(), uri);
 
                 log.debug("방문 로그 비동기 처리 요청: 사용자 ID={}, URI={}",
                         loginUser.getUserId(), uri);
