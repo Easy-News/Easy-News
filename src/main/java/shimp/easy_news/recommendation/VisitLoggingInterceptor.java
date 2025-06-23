@@ -72,7 +72,7 @@ public class VisitLoggingInterceptor implements HandlerInterceptor {
         }
 
         // 뉴스 상세 페이지만 로깅
-        if (uri.startsWith("/news/") && uri.length() > "/news/".length()) {
+        if (uri.startsWith("/news/news/") && uri.length() > "/news/news/".length()) {
             // 정적 리소스 제외
             return !uri.contains(".css") &&
                     !uri.contains(".js") &&
