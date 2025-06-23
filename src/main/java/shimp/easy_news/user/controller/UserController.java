@@ -3,17 +3,6 @@ package shimp.easy_news.user.controller;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-<<<<<<< HEAD
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.beans.factory.annotation.Autowired;
-import shimp.easy_news.user.repository.UserRepository;
-import shimp.easy_news.user.domain.User;
-import shimp.easy_news.user.domain.UserClicks;
-=======
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
->>>>>>> origin/feat/newsCheck
 
 @Controller
 @Slf4j
@@ -40,13 +28,10 @@ import java.util.concurrent.CompletableFuture;
 public class UserController {
 
     private final UserRepository userRepository;
-<<<<<<< HEAD
-=======
     private final NewsRepository newsRepository;
     private final NewsCheckService newsService;
     private final VisitLogService visitLogService;
     private final NewsCheckService newsCheckService;
->>>>>>> origin/feat/newsCheck
 
     @GetMapping("/signup")
     public String showSignupForm(Model model) {
@@ -86,12 +71,6 @@ public class UserController {
     }
 
     @GetMapping("/home")
-<<<<<<< HEAD
-    public String hello() {
-        return "home";
-    }
-
-=======
     public String home(Model model,
                        HttpSession session,
                        @RequestParam(defaultValue = "5") int size) {
@@ -245,8 +224,6 @@ public class UserController {
         userRepository.save(user);
     }
 
-
->>>>>>> origin/feat/newsCheck
     // Login form backing object
     public static class LoginForm {
         private String username;
@@ -265,8 +242,6 @@ public class UserController {
             this.password = password;
         }
     }
-<<<<<<< HEAD
-=======
 
     public static class NewsCheckForm {
         private List<Long> selectedNewsIds;
@@ -303,5 +278,4 @@ public class UserController {
         }
     }
 
->>>>>>> origin/feat/newsCheck
 }
