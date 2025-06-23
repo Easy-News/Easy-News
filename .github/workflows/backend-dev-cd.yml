@@ -1,3 +1,5 @@
+# 파일명: .github/workflows/java-cd-with-gradle.yml
+
 name: Java CD with Gradle
 
 on:
@@ -8,20 +10,19 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
-      write-all
-
-
+      contents: read
+      packages: write
+    
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v4.6.0
+        uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
-        # Configure Gradle for optimal use in GiHub Actions, including caching of downloaded dependencies.
-        # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
@@ -33,36 +34,49 @@ jobs:
           GPT_API_KEY: ${{ secrets.GPT_API_KEY }}
           GPT_API_URL: ${{ secrets.GPT_API_URL }}
           MAIL_ADDRESS: ${{ secrets.MAIL_ADDRESS }}
-          MAIL_PASSWORD: ${{secrets.MAIL_PASSWORD}}
-          MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
-          MYSQL_URL: ${{secrets.MYSQL_URL}}
-          MYSQL_USER: ${{secrets.MYSQL_USER}}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+          MYSQL_URL: ${{ secrets.MYSQL_URL }}
+          MYSQL_USER: ${{ secrets.MYSQL_USER }}
         run: ./gradlew build
+
+      # --- Docker 관련 스텝을 "모범 사례(Best Practice)"로 교체 ---
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-        # dockerfile을 통해 이미지를 빌드하고, 이를 docker repo로 push
-      - name: Docker build & push to docker repo
-        run: |
-          echo "${{ secrets.DOCKER_PASSWORD }}" | sudo docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-          docker buildx build \
-            --build-arg GPT_API_KEY=${{ secrets.GPT_API_KEY }} \
-            --build-arg GPT_API_URL=${{ secrets.GPT_API_URL }} \
-            --build-arg MAIL_ADDRESS=${{ secrets.MAIL_ADDRESS }} \
-            --build-arg MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }} \
-            --build-arg MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }} \
-            --build-arg MYSQL_URL=${{ secrets.MYSQL_URL }} \
-            --build-arg MYSQL_USER=${{ secrets.MYSQL_USER }} \
-            --platform linux/amd64,linux/arm64 \
-            -f ./infra/Dockerfile \
-            -t ${{ secrets.DOCKER_REPO }} \
-            --push \
-            .
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # appleboy/ssh-action@master 액션을 사용하여 지정한 서버에 ssh로 접속하고, script를 실행합니다.
-      # script의 내용은 도커의 기존 프로세스들을 제거하고, docker repo로부터 방금 위에서 push한 내용을 pull 받아 실행하는 것입니다.
-      # 실행 시, docker image만 빌드
+      # [수정됨] 수동 'run' 스텝 대신 공식 'build-and-push' 액션 사용
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          # Docker 빌드 컨텍스트의 경로 (보통 현재 디렉토리)
+          context: .
+          # Dockerfile 경로 (경로가 정확한지 다시 한번 확인해주세요)
+          file: ./infra/docker/Dockerfile
+          # 빌드 인자(args)를 여기에 전달
+          build-args: |
+            GPT_API_KEY=${{ secrets.GPT_API_KEY }}
+            GPT_API_URL=${{ secrets.GPT_API_URL }}
+            MAIL_ADDRESS=${{ secrets.MAIL_ADDRESS }}
+            MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}
+            MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
+            MYSQL_URL=${{ secrets.MYSQL_URL }}
+            MYSQL_USER=${{ secrets.MYSQL_USER }}
+          # 빌드할 플랫폼
+          platforms: linux/amd64,linux/arm64
+          # 푸시할 저장소와 태그 (DOCKER_REPO Secret 사용)
+          tags: ${{ secrets.DOCKER_REPO }}
+          # 빌드 후 바로 푸시
+          push: true
+      
+      # --- 서버 배포 스크립트 안정성 강화 ---
+
       - name: Deploy to server
         uses: appleboy/ssh-action@v1.2.0
         id: deploy
@@ -73,27 +87,19 @@ jobs:
           key: ${{ secrets.KEY }}
           envs: GITHUB_SHA
           script: |
+            # 서버에서 Docker Hub 로그인
             echo "${{ secrets.DOCKER_PASSWORD }}" | sudo docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-            # 기존 컨테이너와 이미지를 정리
-            sudo docker stop easy_news_main
-            sudo docker rm easy_news_main
-            sudo docker rmi ${{ secrets.DOCKER_REPO }}
+
+            # [수정됨] 컨테이너가 없어도 오류가 발생하지 않도록 || true 추가
+            sudo docker stop easy_news_main || true
+            sudo docker rm easy_news_main || true
+            
+            # [수정됨] 이미지가 없어도 오류가 발생하지 않도록 || true 추가
+            sudo docker rmi ${{ secrets.DOCKER_REPO }} || true
+            
             # 새로운 이미지 풀 및 실행
             sudo docker pull ${{ secrets.DOCKER_REPO }}
             sudo docker run -d --name easy_news_main -v /var/log/springboot:/var/log/springboot -p 1225:1225 ${{ secrets.DOCKER_REPO }}
 
-#      - name: Notify
-#        uses: actions/github-script@v7
-#        with:
-#          script: |
-#            github.rest.issues.createComment({
-#              issue_number: context.issue.number,
-#              owner: context.repo.owner,
-#              repo: context.repo.repo,
-#              body: '🌎 배포하였습니다.'
-#            })
-#
-#      - name: add label
-#        uses: actions-ecosystem/action-add-labels@v1
-#        with:
-#          labels: ":satellite: 자동 배포"
+            # [추가됨] 사용하지 않는 도커 리소스 정리 (디스크 공간 확보)
+            sudo docker system prune -af
