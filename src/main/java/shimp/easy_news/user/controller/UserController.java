@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import shimp.easy_news.news.constant.SubCategory;
 import shimp.easy_news.news.domain.News;
 import shimp.easy_news.news.repository.NewsRepository;
+import shimp.easy_news.recommendation.VisitLogService;
 import shimp.easy_news.user.dto.HomeNewsResponse;
 import shimp.easy_news.user.repository.UserRepository;
 import shimp.easy_news.user.domain.User;
@@ -18,6 +19,8 @@ import shimp.easy_news.user.service.NewsCheckService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 @Controller
 @Slf4j
@@ -27,6 +30,8 @@ public class UserController {
     private final UserRepository userRepository;
     private final NewsRepository newsRepository;
     private final NewsCheckService newsService;
+    private final VisitLogService visitLogService;
+    private final NewsCheckService newsCheckService;
 
     @GetMapping("/signup")
     public String showSignupForm(Model model) {
@@ -107,6 +112,43 @@ public class UserController {
         return ResponseEntity.ok("success");
     }
 
+    @GetMapping("/article/{newsId}")
+    public String showArticle(@PathVariable Long newsId, Model model, HttpSession session) {
+        Optional<News> newsOptional = newsRepository.findById(newsId);
+
+        if (newsOptional.isEmpty()) {
+            return "redirect:/home";
+        }
+
+        News news = newsOptional.get();
+
+        // 모든 이미지 URL 추출
+        List<String> imageUrls = newsCheckService.extractAllImageUrls(news.getImageUrl());
+        for (String img : imageUrls) {
+            System.out.println("뉴스 이미지: " + img);
+        }
+        System.out.println("추출된 이미지 개수: " + imageUrls.size());
+
+        User loginUser = (User) session.getAttribute("loginUser");
+//        if (loginUser != null) {
+//            // 클릭 로깅 (비동기로 처리)
+//            CompletableFuture.runAsync(() -> {
+//                try {
+//                    visitLogService.logVisit(loginUser.getUserId(), "/news/" + newsId);
+//                } catch (Exception e) {
+//                    log.error("클릭 로깅 실패", e);
+//                }
+//            });
+//        }
+
+        model.addAttribute("news", news);
+        model.addAttribute("imageUrls", imageUrls);
+        model.addAttribute("userName", loginUser != null ? loginUser.getNickname() : "게스트");
+
+        return "article";
+    }
+
+
     private void updateUserClicks(User user, SubCategory subCategory) {
         UserClicks userClicks = user.getUserClicks();
 
@@ -179,7 +221,7 @@ public class UserController {
 
         System.out.println("SubCategory: " + subCategory);
 
-        userRepository.save(user); // 변경사항 저장
+        userRepository.save(user);
     }
 
 

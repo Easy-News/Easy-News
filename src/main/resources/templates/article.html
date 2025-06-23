@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>기사 상세</title>
+    <title th:text="${news != null ? news.title : '기사 상세'} + ' - 이지뉴스'">기사 상세 - 이지뉴스</title>
     <style>
         body {
             margin: 0;
@@ -96,53 +96,86 @@
         .article-content p {
             margin-bottom: 16px;
         }
+        .article a:hover {
+            background-color: #f8f9fa;
+            transform: translateY(-2px);
+            transition: all 0.2s ease;
+        }
+        article {
+            transition: all 0.2s ease;
+        }
+
     </style>
 </head>
 <body>
 
 <header class="header-bar">
-    <div class="logo">이지뉴스</div>
+    <div class="logo">
+        <a th:href="@{/home}">이지뉴스</a>
+    </div>
     <nav class="header-nav">
         <div class="categories">
-            <a href="#">정치</a>
-            <a href="#">경제</a>
-            <a href="#">사회</a>
-            <a href="#">IT/과학</a>
-            <a href="#">세계</a>
+            <a th:href="@{/category/POLITICS}">정치</a>
+            <a th:href="@{/category/ECONOMY}">경제</a>
+            <a th:href="@{/category/SOCIETY}">사회</a>
+            <a th:href="@{/category/IT_SCIENCE}">IT/과학</a>
+            <a th:href="@{/category/WORLD}">세계</a>
         </div>
         <div class="user">
-            <a href="#">홍길동</a>
+            <a href="#" th:text="${userName}">홍길동</a>
         </div>
     </nav>
 </header>
 
 <div class="container">
-    <article>
-        <h1 class="article-title">[기사 제목이 여기에 들어갑니다]</h1>
+    <article th:if="${news != null}">
+        <h1 class="article-title" th:text="${news.title}">[기사 제목이 여기에 들어갑니다]</h1>
         <div class="article-meta">
-            <span>발행일: 2025-05-05</span>
-            <span>카테고리: IT/과학</span>
+            <span th:text="'발행일: ' + ${#temporals.format(news.createdAt, 'yyyy-MM-dd')}">발행일: 2025-05-05</span>
+            <span th:text="'카테고리: ' + ${news.category}">카테고리: IT/과학</span>
         </div>
-        <img
-                class="article-img"
-                src="https://via.placeholder.com/800x400"
-                alt="기사 대표 이미지"
-        />
+
+        <!-- 이미지가 있는 경우 모든 이미지 표시 -->
+        <div th:if="${imageUrls != null and !imageUrls.isEmpty()}" class="article-images">
+            <img th:each="imageUrl : ${imageUrls}"
+                 class="article-img"
+                 th:src="${imageUrl}"
+                 th:alt="${news.title + ' 이미지'}"
+                 style="margin-bottom: 15px;"
+            />
+        </div>
+
+        <!-- 이미지가 없는 경우 기본 이미지 -->
+        <div th:if="${imageUrls == null or imageUrls.isEmpty()}">
+            <img class="article-img"
+                 src="https://via.placeholder.com/800x400"
+                 alt="기본 이미지"
+            />
+        </div>
+
         <div class="article-content">
-            <p>
-                여기에 본문 첫 번째 문단이 들어갑니다. 사용자가 기사를 읽으며 내용을 쉽게 따라갈 수 있도록
-                적절한 길이로 문장을 구성하세요.
-            </p>
-            <p>
-                두 번째 문단 예시입니다. 기사 내용이 길어질 경우 여러 개의 단락으로 나누어 가독성을 높입니다.
-            </p>
-            <p>
-                필요에 따라 인용구, 굵은 글씨(<strong>strong</strong>), 기울임꼴(<em>emphasis</em>) 등을
-                활용해 중요한 부분을 강조할 수 있습니다.
-            </p>
+            <div th:utext="${news.content}">
+                <p>여기에 본문 내용이 들어갑니다.</p>
+            </div>
+        </div>
+
+        <!-- 원본 기사 링크 -->
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+            <a th:href="${news.articleUrl}" target="_blank"
+               style="color: #007bff; text-decoration: underline;">
+                원본 기사 보기
+            </a>
         </div>
     </article>
+
+    <!-- 뉴스가 없는 경우 -->
+    <div th:if="${news == null}" style="text-align: center; padding: 50px;">
+        <h2>기사를 찾을 수 없습니다.</h2>
+        <p>요청하신 기사가 존재하지 않거나 삭제되었습니다.</p>
+        <a th:href="@{/home}" style="color: #007bff; text-decoration: underline;">홈으로 돌아가기</a>
+    </div>
 </div>
+
 
 </body>
 </html>

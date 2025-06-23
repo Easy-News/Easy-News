@@ -136,24 +136,37 @@ public class NewsCheckService {
         return content.substring(0, 100) + "...";
     }
 
-    private String extractFirstImageUrl(String imageUrl) {
+    /**
+     * 이미지 URL 문자열에서 모든 유효한 이미지 URL을 추출
+     */
+    public List<String> extractAllImageUrls(String imageUrl) {
+        List<String> imageUrls = new ArrayList<>();
+
         if (imageUrl == null || imageUrl.isEmpty()) {
-            return null;
+            return imageUrls;
         }
 
         String cleanUrl = imageUrl.replace("\"", "").trim();
 
-        // 여러 URL이 있는 경우 첫 번째만 선택
         String[] urls = cleanUrl.split("[\\n\\r,\\s]+");
         for (String url : urls) {
             url = url.trim();
             if (!url.isEmpty() && (url.startsWith("http://") || url.startsWith("https://"))) {
-                return url;
+                imageUrls.add(url);
             }
         }
 
-        return null;
+        return imageUrls;
     }
+
+    /**
+     * 첫 번째 이미지 URL만 추출
+     */
+    private String extractFirstImageUrl(String imageUrl) {
+        List<String> urls = extractAllImageUrls(imageUrl);
+        return urls.isEmpty() ? null : urls.get(0);
+    }
+
 
 }
 
