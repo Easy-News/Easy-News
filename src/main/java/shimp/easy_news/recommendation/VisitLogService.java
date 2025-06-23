@@ -28,7 +28,6 @@ public class VisitLogService {
             if (uri == null || !uri.startsWith("/news/article/")) {
                 return;
             }
-            log.warn(uri);
             Long newsId = extractNewsIdFromUri(uri);
             if (newsId == null) {
                 log.warn("뉴스 ID를 추출할 수 없습니다. URI: {}", uri);
@@ -40,7 +39,6 @@ public class VisitLogService {
                 log.warn("뉴스 ID {}에 대한 서브카테고리를 찾을 수 없습니다.", newsId);
                 return;
             }
-            log.warn(subCategory.toString());
             Optional<User> userOptional = userRepository.findById(userId);
             if (userOptional.isEmpty()) {
                 log.warn("사용자 ID {}를 찾을 수 없습니다.", userId);

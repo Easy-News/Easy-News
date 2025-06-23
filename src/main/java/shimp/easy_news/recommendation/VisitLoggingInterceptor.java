@@ -22,11 +22,9 @@ public class VisitLoggingInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request,
                              HttpServletResponse response,
                              Object handler) {
-        log.error("TEST");
         try {
             // GET 요청만 로깅 (POST 등은 제외)
             if (!"GET".equalsIgnoreCase(request.getMethod())) {
-                log.info(request.getRequestURI());
                 return true;
             }
 
