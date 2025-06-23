@@ -61,6 +61,7 @@ public class VisitLogService {
 
             // UserClicks만 저장 (User는 이미 영속 상태)
             userClicksRepository.save(clicks);
+            log.warn("SAVED");
 
             log.debug("사용자 ID: {}, 뉴스 ID: {}, 카테고리: {}에 대한 클릭이 기록되었습니다.",
                     userId, newsId, subCategory);
