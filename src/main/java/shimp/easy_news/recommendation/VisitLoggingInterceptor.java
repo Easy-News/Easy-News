@@ -45,6 +45,7 @@ public class VisitLoggingInterceptor implements HandlerInterceptor {
             String uri = request.getRequestURI();
 
             // 로깅 대상 URI인지 확인
+            log.info("uri:{}", uri);
             if (isLoggableUri(uri)) {
                 // 비동기로 로깅 처리하여 응답 성능에 영향 최소화
                 CompletableFuture.runAsync(() -> {
