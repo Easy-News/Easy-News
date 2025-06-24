@@ -30,28 +30,25 @@ public class VisitLoggingInterceptor implements HandlerInterceptor {
 
             HttpSession session = request.getSession(false);
             if (session == null) {
+                log.error("session is null");
                 return true;
             }
 
             User loginUser = (User) session.getAttribute("loginUser");
             if (loginUser == null) {
+                log.error("loginUser is null");
                 return true;
             }
 
             String uri = request.getRequestURI();
 
             // 로깅 대상 URI인지 확인
+            log.info("uri:{}", uri);
             if (isLoggableUri(uri)) {
                 // 비동기로 로깅 처리하여 응답 성능에 영향 최소화
-                CompletableFuture.runAsync(() -> {
-                    try {
-                        visitLogService.logVisit(loginUser.getUserId(), uri);
-                    } catch (Exception e) {
-                        log.error("비동기 방문 로그 기록 중 오류 발생", e);
-                    }
-                });
+                visitLogService.logVisit(loginUser.getUserId(), uri);
 
-                log.debug("방문 로그 비동기 처리 요청: 사용자 ID={}, URI={}",
+                log.warn("방문 로그 비동기 처리 요청: 사용자 ID={}, URI={}",
                         loginUser.getUserId(), uri);
             }
 
@@ -72,7 +69,7 @@ public class VisitLoggingInterceptor implements HandlerInterceptor {
         }
 
         // 뉴스 상세 페이지만 로깅
-        if (uri.startsWith("/news/") && uri.length() > "/news/".length()) {
+        if (uri.startsWith("/news/article/") && uri.length() > "/news/article/".length()) {
             // 정적 리소스 제외
             return !uri.contains(".css") &&
                     !uri.contains(".js") &&

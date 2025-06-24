@@ -25,10 +25,9 @@ public class VisitLogService {
     @Transactional
     public void logVisit(Long userId, String uri) {
         try {
-            if (uri == null || !uri.startsWith("/news/")) {
+            if (uri == null || !uri.startsWith("/news/article/")) {
                 return;
             }
-
             Long newsId = extractNewsIdFromUri(uri);
             if (newsId == null) {
                 log.warn("뉴스 ID를 추출할 수 없습니다. URI: {}", uri);
@@ -40,7 +39,6 @@ public class VisitLogService {
                 log.warn("뉴스 ID {}에 대한 서브카테고리를 찾을 수 없습니다.", newsId);
                 return;
             }
-
             Optional<User> userOptional = userRepository.findById(userId);
             if (userOptional.isEmpty()) {
                 log.warn("사용자 ID {}를 찾을 수 없습니다.", userId);
@@ -48,7 +46,6 @@ public class VisitLogService {
             }
 
             User user = userOptional.get();
-
             // UserClicks가 없으면 생성 (User의 헬퍼 메서드 사용)
             UserClicks clicks = user.getOrCreateUserClicks();
 
@@ -56,14 +53,11 @@ public class VisitLogService {
             if (clicks.getId() == null) {
                 userRepository.save(user); // Cascade로 UserClicks도 함께 저장됨
             }
-
+            log.warn(clicks.toString());
             incrementClickByCategory(clicks, subCategory);
 
             // UserClicks만 저장 (User는 이미 영속 상태)
             userClicksRepository.save(clicks);
-
-            log.debug("사용자 ID: {}, 뉴스 ID: {}, 카테고리: {}에 대한 클릭이 기록되었습니다.",
-                    userId, newsId, subCategory);
 
         } catch (Exception e) {
             log.error("방문 로그 기록 중 오류 발생. 사용자 ID: {}, URI: {}", userId, uri, e);

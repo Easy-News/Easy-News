@@ -14,7 +14,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(visitLoggingInterceptor)
-                .addPathPatterns("/news/**")  // 뉴스 관련 경로에만 적용
+                .addPathPatterns("/article/**")  // 뉴스 관련 경로에만 적용
                 .excludePathPatterns(
                         "/news/api/**",     // API 호출 제외
                         "/news/admin/**",   // 관리자 페이지 제외
