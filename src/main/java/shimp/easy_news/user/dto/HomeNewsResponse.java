@@ -13,4 +13,8 @@ public class HomeNewsResponse {
     private List<NewsDto> personalizedNews;    // 개인화 추천
     private List<NewsDto> headlineNews;        // 헤드라인
     private List<NewsDto> realTimeNews;
+
+    // 페이지 정보 추가
+    private int headlineTotalPages;
+    private int personalizedTotalPages;
 }

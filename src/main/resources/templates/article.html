@@ -7,102 +7,331 @@
     <style>
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f4f4f4;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
             color: #333;
-        }
-        a {
-            text-decoration: none;
-            color: inherit;
+            line-height: 1.6;
         }
 
         /* ─────────── HEADER ─────────── */
         header.header-bar {
-            background-color: #B3E5FC;  /* 파스텔톤 블루 */
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
         }
         header.header-bar .logo {
             text-align: center;
-            font-size: 28px;
-            font-weight: bold;
-            padding: 12px 0 4px;
+            font-size: 32px;
+            font-weight: 700;
+            padding: 20px 0 10px;
+            color: white;
         }
         header.header-bar .header-nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 800px;
+            max-width: 1000px;
             margin: 0 auto;
-            padding: 16px 20px;
-            background: #fff;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-            box-sizing: border-box;
+            padding: 15px 30px;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
         }
         header.header-bar .header-nav .categories a {
-            margin-right: 16px;
+            margin-right: 30px;
             font-size: 16px;
-            font-weight: bold;
-            color: #333;
+            font-weight: 600;
+            color: #495057;
+            transition: color 0.3s ease;
+            padding: 8px 16px;
+            border-radius: 20px;
         }
-        header.header-bar .header-nav .categories a:last-child {
-            margin-right: 0;
+
+        header.header-bar .header-nav .categories a:hover {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
         }
         header.header-bar .header-nav .user a {
             font-size: 16px;
-            padding: 6px 12px;
-            border: 2px solid #333;
-            border-radius: 4px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 100px;
-            color: #333;
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        header.header-bar .header-nav .user a:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
         }
 
         /* ────────── MAIN CONTENT ────────── */
         .container {
-            max-width: 800px;
-            margin: 30px auto;
-            background: #fff;
-            border-radius: 6px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            padding: 20px 30px;
-            box-sizing: border-box;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
         }
+
+        .article-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        .article-header {
+            padding: 40px 40px 20px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-bottom: 1px solid #dee2e6;
+        }
+
         .article-title {
-            font-size: 32px;
-            margin: 0 0 10px;
-            font-weight: bold;
+            font-size: 36px;
+            font-weight: 700;
+            color: #212529;
+            margin: 0 0 20px 0;
+            line-height: 1.3;
         }
+
         .article-meta {
+            display: flex;
+            gap: 20px;
             font-size: 14px;
-            color: #666;
-            margin-bottom: 20px;
+            color: #6c757d;
+            margin-bottom: 10px;
         }
-        .article-meta span {
-            margin-right: 20px;
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        .article-img {
+
+        .meta-item::before {
+            content: '';
+            width: 4px;
+            height: 4px;
+            background: #667eea;
+            border-radius: 50%;
+        }
+
+        .article-body {
+            padding: 40px;
+        }
+
+        /* ────────── 개선된 이미지 갤러리 스타일 ────────── */
+        .article-images {
+            margin-bottom: 30px;
+        }
+
+        /* 단일 이미지인 경우 */
+        .article-images.single-image .article-img {
             width: 100%;
+            max-width: 600px;
+            height: auto;
             max-height: 400px;
-            object-fit: cover;
-            border-radius: 4px;
-            margin-bottom: 20px;
-            border: 2px solid #ccc;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin: 0 auto 20px;
+            display: block;
+            transition: transform 0.3s ease;
         }
+
+        /* 여러 이미지인 경우 그리드 레이아웃 */
+        .article-images.multiple-images {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        /* 2개 이미지 */
+        .article-images.multiple-images.count-2 {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        /* 3개 이미지 */
+        .article-images.multiple-images.count-3 {
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+        }
+
+        .article-images.multiple-images.count-3 .article-img:first-child {
+            grid-column: 1 / -1;
+        }
+
+        /* 4개 이상 이미지 */
+        .article-images.multiple-images.count-4-plus {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .article-images.multiple-images .article-img {
+            width: 100%;
+            height: 250px;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .article-img:hover {
+            transform: scale(1.05);
+            cursor: pointer;
+        }
+
+        /* 모바일 반응형 */
+        @media (max-width: 768px) {
+            .article-images.multiple-images.count-2,
+            .article-images.multiple-images.count-3,
+            .article-images.multiple-images.count-4-plus {
+                grid-template-columns: 1fr;
+            }
+
+            .article-images.multiple-images.count-3 .article-img:first-child {
+                grid-column: 1;
+            }
+
+            .article-images.multiple-images .article-img {
+                height: 200px;
+            }
+        }
+
         .article-content {
-            line-height: 1.6;
-            font-size: 16px;
+            font-size: 18px;
+            line-height: 1.8;
+            color: #495057;
+            margin-bottom: 40px;
         }
+
         .article-content p {
-            margin-bottom: 16px;
+            margin-bottom: 20px;
         }
-        .article a:hover {
-            background-color: #f8f9fa;
+
+        .article-content h1, .article-content h2, .article-content h3 {
+            color: #212529;
+            margin: 30px 0 15px 0;
+            font-weight: 600;
+        }
+
+        .article-footer {
+            padding: 30px 40px;
+            background: #f8f9fa;
+            border-top: 1px solid #dee2e6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .original-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .original-link:hover {
+            background: #5a6fd8;
             transform: translateY(-2px);
-            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
-        article {
-            transition: all 0.2s ease;
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 24px;
+            background: #6c757d;
+            color: white;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        /* ────────── ERROR STATE ────────── */
+        .error-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        .error-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #495057;
+            margin: 0 0 15px 0;
+        }
+
+        .error-description {
+            font-size: 16px;
+            color: #6c757d;
+            margin: 0 0 30px 0;
+        }
+
+        .error-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .error-link:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* ────────── RESPONSIVE ────────── */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            .article-header {
+                padding: 30px 25px 15px;
+            }
+
+            .article-title {
+                font-size: 28px;
+            }
+
+            .article-body {
+                padding: 30px 25px;
+            }
+
+            .article-footer {
+                padding: 20px 25px;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .article-meta {
+                flex-direction: column;
+                gap: 10px;
+            }
         }
     </style>
 </head>
@@ -110,15 +339,15 @@
 
 <header class="header-bar">
     <div class="logo">
-        <a th:href="@{/home}">이지뉴스</a>
+        <a th:href="@{/home}">EASY-NEWS</a>
     </div>
     <nav class="header-nav">
         <div class="categories">
-            <a th:href="@{/category/POLITICS}">정치</a>
+            <a th:href="@{/category/POLITIC}">정치</a>
             <a th:href="@{/category/ECONOMY}">경제</a>
-            <a th:href="@{/category/SOCIETY}">사회</a>
+            <a th:href="@{/category/SOCIAL}">사회</a>
             <a th:href="@{/category/IT_SCIENCE}">IT/과학</a>
-            <a th:href="@{/category/WORLD}">세계</a>
+            <a th:href="@{/category/GLOBAL}">세계</a>
         </div>
         <div class="user">
             <a href="#" th:text="${userName}">홍길동</a>
@@ -127,54 +356,74 @@
 </header>
 
 <div class="container">
-    <article th:if="${news != null}">
-        <h1 class="article-title" th:text="${news.title}">[기사 제목이 여기에 들어갑니다]</h1>
-        <div class="article-meta">
-            <span th:text="'발행일: ' + ${#temporals.format(news.createdAt, 'yyyy-MM-dd')}">발행일: 2025-05-05</span>
-            <span th:text="'카테고리: ' + ${news.category}">카테고리: IT/과학</span>
-        </div>
-
-        <!-- 이미지가 있는 경우 모든 이미지 표시 -->
-        <div th:if="${imageUrls != null and !imageUrls.isEmpty()}" class="article-images">
-            <img th:each="imageUrl : ${imageUrls}"
-                 class="article-img"
-                 th:src="${imageUrl}"
-                 th:alt="${news.title + ' 이미지'}"
-                 style="margin-bottom: 15px;"
-            />
-        </div>
-
-        <!-- 이미지가 없는 경우 기본 이미지 -->
-        <div th:if="${imageUrls == null or imageUrls.isEmpty()}">
-            <img class="article-img"
-                 src="https://via.placeholder.com/800x400"
-                 alt="기본 이미지"
-            />
-        </div>
-
-        <div class="article-content">
-            <div th:utext="${news.content}">
-                <p>여기에 본문 내용이 들어갑니다.</p>
+    <!-- 기사 내용 -->
+    <div class="article-card" th:if="${news != null}">
+        <div class="article-header">
+            <h1 class="article-title" th:text="${news.title}">기사 제목이 여기에 들어갑니다</h1>
+            <div class="article-meta">
+                <div class="meta-item">
+                    <span th:text="${#temporals.format(news.createdAt, 'yyyy년 MM월 dd일')}">2025년 06월 24일</span>
+                </div>
+                <div class="meta-item">
+                    <span th:text="${news.category}">카테고리</span>
+                </div>
+                <div class="meta-item">
+                    <span th:text="${news.subCategory}">서브카테고리</span>
+                </div>
             </div>
         </div>
 
-        <!-- 원본 기사 링크 -->
-        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
-            <a th:href="${news.articleUrl}" target="_blank"
-               style="color: #007bff; text-decoration: underline;">
-                원본 기사 보기
+        <div class="article-body">
+            <!-- 이미지가 있는 경우 모든 이미지 표시 -->
+            <div th:if="${imageUrls != null and !imageUrls.isEmpty()}"
+                 class="article-images"
+                 th:classappend="${#lists.size(imageUrls) == 1} ? 'single-image' :
+                                (${#lists.size(imageUrls) == 2} ? 'multiple-images count-2' :
+                                (${#lists.size(imageUrls) == 3} ? 'multiple-images count-3' :
+                                'multiple-images count-4-plus'))">
+                <img th:each="imageUrl : ${imageUrls}"
+                     class="article-img"
+                     th:src="${imageUrl}"
+                     th:alt="${news.title + ' 이미지'}"
+                     onclick="openImageModal(this)"
+                />
+            </div>
+
+            <!-- 이미지가 없는 경우 기본 이미지 표시하지 않음 -->
+
+            <div class="article-content">
+                <div th:utext="${news.content}">
+                    <p>여기에 본문 내용이 들어갑니다.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="article-footer">
+            <a th:href="@{/home}" class="back-link">
+                ← 홈으로 돌아가기
+            </a>
+            <a th:href="${news.articleUrl}" target="_blank" class="original-link">
+                원본 기사 보기 →
             </a>
         </div>
-    </article>
+    </div>
 
     <!-- 뉴스가 없는 경우 -->
-    <div th:if="${news == null}" style="text-align: center; padding: 50px;">
-        <h2>기사를 찾을 수 없습니다.</h2>
-        <p>요청하신 기사가 존재하지 않거나 삭제되었습니다.</p>
-        <a th:href="@{/home}" style="color: #007bff; text-decoration: underline;">홈으로 돌아가기</a>
+    <div th:if="${news == null}" class="error-container">
+        <h2 class="error-title">기사를 찾을 수 없습니다</h2>
+        <p class="error-description">요청하신 기사가 존재하지 않거나 삭제되었습니다.</p>
+        <a th:href="@{/home}" class="error-link">
+            ← 홈으로 돌아가기
+        </a>
     </div>
 </div>
 
+<script>
+    function openImageModal(img) {
+        // 이미지 클릭 시 새 창에서 원본 크기로 보기
+        window.open(img.src, '_blank');
+    }
+</script>
 
 </body>
 </html>

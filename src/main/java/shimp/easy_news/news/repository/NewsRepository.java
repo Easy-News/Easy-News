@@ -25,4 +25,7 @@ public interface NewsRepository extends JpaRepository<News, Long> {
     List<News> findBySubCategoryInOrderByCreatedAtDesc(List<SubCategory> subCategories, Pageable pageable);
 
     Page<News> findByCategory(Category category, Pageable pageable);
+
+    Page<News> findPageByNewsType(NewsType newsType, Pageable pageable);
+
 }

@@ -3,96 +3,208 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>로그인</title>
+    <title>로그인 - 이지뉴스</title>
     <style>
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f4f4f4;
-        }
-        /* 상단 바 */
-        .header-bar {
-            background-color: #B3E5FC; /* 파스텔톤 블루 */
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             color: #333;
+            line-height: 1.6;
+        }
+
+        .header-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            color: white;
             text-align: center;
-            padding: 15px 0;
-            font-size: 24px;
-            font-weight: bold;
+            padding: 20px 0;
+            font-size: 32px;
+            font-weight: 700;
         }
-        /* 로그인 폼 */
-        .login-form {
-            background: #fff;
-            padding: 20px 30px;
-            border-radius: 6px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            padding: 50px 40px;
             width: 100%;
-            max-width: 400px;
-            margin: 60px auto;
-            box-sizing: border-box;
+            max-width: 450px;
+            margin-top: 100px;
+            position: relative;
         }
-        .login-form h2 {
+
+        .login-header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 40px;
         }
-        .login-form label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
+
+        .login-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #212529;
+            margin: 0 0 10px 0;
         }
-        .login-form input[type="text"],
-        .login-form input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        .login-form button {
-            width: 100%;
-            padding: 12px;
-            background: #28a745;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
+
+        .login-subtitle {
             font-size: 16px;
-            cursor: pointer;
+            color: #6c757d;
+            margin: 0;
         }
-        .login-form button:hover {
-            background: #218838;
+
+        .form-group {
+            margin-bottom: 25px;
         }
-        .login-form .signup-link {
+
+        .form-label {
             display: block;
-            text-align: center;
-            margin-top: 15px;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
             font-size: 14px;
         }
-        .login-form .signup-link a {
-            color: #007bff;
-            text-decoration: none;
+
+        .form-input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            background: #f8f9fa;
         }
-        .login-form .signup-link a:hover {
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: #adb5bd;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 25px;
+        }
+
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .login-button:active {
+            transform: translateY(0);
+        }
+
+        .signup-link {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .signup-link p {
+            margin: 0;
+            color: #6c757d;
+            font-size: 14px;
+        }
+
+        .signup-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .signup-link a:hover {
+            color: #5a6fd8;
             text-decoration: underline;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* 반응형 */
+        @media (max-width: 768px) {
+            .login-container {
+                margin: 80px 20px 20px;
+                padding: 40px 30px;
+            }
+
+            .header-bar {
+                font-size: 24px;
+                padding: 15px 0;
+            }
         }
     </style>
 </head>
 <body>
-<div class="header-bar">이지뉴스</div>
+<div class="header-bar">EASY-NEWS</div>
 
-<form th:action="@{/login}" th:object="${loginForm}" class="login-form" method="post">
-    <h2>로그인</h2>
+<div class="login-container">
+    <div class="login-header">
+        <h1 class="login-title">로그인</h1>
+        <p class="login-subtitle">계정에 로그인하여 개인화된 뉴스를 확인하세요</p>
+    </div>
 
-    <label for="username">아이디</label>
-    <input type="text" th:field="*{username}" placeholder="아이디를 입력하세요" required>
+    <!-- 로그인 에러 메시지 -->
+    <div th:if="${loginError}" class="error-message">
+        아이디 또는 비밀번호가 올바르지 않습니다.
+    </div>
 
-    <label for="password">비밀번호</label>
-    <input type="password" th:field="*{password}" placeholder="비밀번호를 입력하세요" required>
+    <form th:action="@{/login}" th:object="${loginForm}" method="post">
+        <div class="form-group">
+            <label for="username" class="form-label">아이디</label>
+            <input type="text"
+                   th:field="*{username}"
+                   class="form-input"
+                   placeholder="아이디를 입력하세요"
+                   required>
+        </div>
 
-    <button type="submit">로그인</button>
+        <div class="form-group">
+            <label for="password" class="form-label">비밀번호</label>
+            <input type="password"
+                   th:field="*{password}"
+                   class="form-input"
+                   placeholder="비밀번호를 입력하세요"
+                   required>
+        </div>
+
+        <button type="submit" class="login-button">로그인</button>
+    </form>
 
     <div class="signup-link">
-        아직 계정이 없으신가요? <a href="/signup">회원가입</a>
+        <p>아직 계정이 없으신가요? <a href="/signup">회원가입</a></p>
     </div>
-</form>
+</div>
 </body>
 </html>

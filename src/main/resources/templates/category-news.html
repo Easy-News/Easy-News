@@ -7,147 +7,312 @@
     <style>
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f4f4f4;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
             color: #333;
-        }
-        a {
-            text-decoration: none;
-            color: inherit;
+            line-height: 1.6;
         }
 
         /* ─────────── HEADER ─────────── */
         header.header-bar {
-            background-color: #B3E5FC;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
         }
         header.header-bar .logo {
             text-align: center;
-            font-size: 28px;
-            font-weight: bold;
-            padding: 12px 0 4px;
+            font-size: 32px;
+            font-weight: 700;
+            padding: 20px 0 10px;
+            color: white;
         }
         header.header-bar .header-nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 16px 20px;
-            background: #fff;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-            box-sizing: border-box;
+            padding: 15px 30px;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
         }
         header.header-bar .header-nav .categories a {
-            margin-right: 20px;
+            margin-right: 30px;
             font-size: 16px;
-            font-weight: bold;
+            font-weight: 600;
+            color: #495057;
+            transition: color 0.3s ease;
+            padding: 8px 16px;
+            border-radius: 20px;
         }
-        header.header-bar .header-nav .categories a:last-child {
-            margin-right: 0;
+        header.header-bar .header-nav .categories a:hover {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+        header.header-bar .header-nav .categories a.active {
+            background: #667eea;
+            color: white;
         }
         header.header-bar .header-nav .user a {
             font-size: 16px;
-            padding: 6px 12px;
-            border: 2px solid #333;
-            border-radius: 4px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 100px;
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        header.header-bar .header-nav .user a:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
         }
 
         /* ────────── MAIN CONTENT ────────── */
         .container {
-            max-width: 1000px;
-            margin: 30px auto;
-            background: #fff;
-            border-radius: 6px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            padding: 20px;
-            box-sizing: border-box;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
         }
-        .page-header {
-            border-bottom: 2px solid #B3E5FC;
-            padding-bottom: 15px;
+
+        .page-header-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+            padding: 40px;
             margin-bottom: 30px;
+            text-align: center;
         }
+
         .page-title {
-            font-size: 28px;
-            font-weight: bold;
-            color: #333;
-            margin: 0;
+            font-size: 36px;
+            font-weight: 700;
+            color: #212529;
+            margin: 0 0 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+
+        .page-title::before {
+            content: '';
+            width: 4px;
+            height: 36px;
+            background: #667eea;
+            margin-right: 15px;
+            border-radius: 2px;
+        }
+
         .page-subtitle {
-            font-size: 16px;
-            color: #666;
-            margin: 5px 0 0 0;
+            font-size: 18px;
+            color: #6c757d;
+            margin: 0;
+            font-weight: 500;
         }
+
+        .news-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
         .news-item {
             display: flex;
             align-items: flex-start;
-            margin-bottom: 25px;
-            padding: 15px;
-            border: 1px solid #eee;
-            border-radius: 8px;
-            transition: all 0.2s ease;
+            padding: 25px 30px;
+            border-bottom: 1px solid #f1f3f4;
+            transition: all 0.3s ease;
         }
+
+        .news-item:last-child {
+            border-bottom: none;
+        }
+
         .news-item:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background: #f8f9fa;
             transform: translateY(-2px);
+            margin: 0 -10px;
+            padding: 25px 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
         }
+
         .news-item img {
             width: 200px;
             height: 120px;
             object-fit: cover;
-            border-radius: 6px;
-            margin-right: 20px;
+            border-radius: 12px;
+            margin-right: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
+
         .news-content {
             flex: 1;
         }
+
         .news-title {
             font-size: 20px;
-            font-weight: bold;
-            margin: 0 0 10px 0;
-            color: #333;
+            font-weight: 600;
+            margin: 0 0 12px 0;
+            color: #212529;
+            line-height: 1.4;
         }
+
         .news-title:hover {
-            color: #007bff;
+            color: #667eea;
         }
+
         .news-summary {
-            font-size: 14px;
-            line-height: 1.5;
-            color: #666;
-            margin: 0 0 10px 0;
+            font-size: 15px;
+            line-height: 1.6;
+            color: #6c757d;
+            margin: 0 0 15px 0;
         }
+
         .news-meta {
-            font-size: 12px;
-            color: #999;
+            font-size: 13px;
+            color: #adb5bd;
+            display: flex;
+            gap: 15px;
+            align-items: center;
         }
-        .no-news {
-            text-align: center;
-            padding: 50px;
-            color: #666;
-        }
-        .pagination {
-            text-align: center;
-            margin-top: 30px;
-        }
-        .pagination a {
+
+        .news-meta span::before {
+            content: '';
+            width: 4px;
+            height: 4px;
+            background: #667eea;
+            border-radius: 50%;
             display: inline-block;
-            padding: 8px 16px;
-            margin: 0 4px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            color: #007bff;
+            margin-right: 8px;
         }
-        .pagination a:hover {
-            background-color: #f8f9fa;
+
+        .no-news {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+            text-align: center;
+            padding: 80px 40px;
         }
-        .pagination .current {
-            background-color: #007bff;
+
+        .no-news h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #495057;
+            margin: 0 0 15px 0;
+        }
+
+        .no-news p {
+            font-size: 16px;
+            color: #6c757d;
+            margin: 0 0 30px 0;
+        }
+
+        .no-news a {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 24px;
+            background: #667eea;
             color: white;
-            border-color: #007bff;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .no-news a:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+
+        /* ────────── PAGINATION ────────── */
+        .pagination-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+            margin-top: 30px;
+            padding: 30px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .pagination {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .pagination a {
+            min-width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            background: white;
+            color: #495057;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .pagination a:hover {
+            border-color: #667eea;
+            color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .pagination a.current {
+            background: #667eea;
+            border-color: #667eea;
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* ────────── RESPONSIVE ────────── */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            .page-header-card {
+                padding: 30px 25px;
+            }
+
+            .page-title {
+                font-size: 28px;
+            }
+
+            .news-item {
+                flex-direction: column;
+                padding: 20px 25px;
+            }
+
+            .news-item img {
+                width: 100%;
+                height: 200px;
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+
+            .news-meta {
+                flex-direction: column;
+                gap: 8px;
+                align-items: flex-start;
+            }
+
+            header.header-bar .header-nav .categories a {
+                margin-right: 15px;
+                font-size: 14px;
+                padding: 6px 12px;
+            }
         }
     </style>
 </head>
@@ -155,7 +320,7 @@
 
 <header class="header-bar">
     <div class="logo">
-        <a th:href="@{/home}">이지뉴스</a>
+        <a th:href="@{/home}">EASY-NEWS</a>
     </div>
     <nav class="header-nav">
         <div class="categories">
@@ -178,13 +343,13 @@
 
 <div class="container">
     <!-- 페이지 헤더 -->
-    <div class="page-header">
+    <div class="page-header-card">
         <h1 class="page-title" th:text="${categoryName} + ' 뉴스'">카테고리 뉴스</h1>
-        <p class="page-subtitle" th:text="'총 ' + ${#lists.size(newsList)} + '개의 기사'">총 0개의 기사</p>
+        <p class="page-subtitle" th:text="'총 ' + ${#lists.size(newsList)} + '개의 기사를 확인하세요'">총 0개의 기사를 확인하세요</p>
     </div>
 
     <!-- 뉴스 목록 -->
-    <div th:if="${newsList != null and !newsList.isEmpty()}">
+    <div th:if="${newsList != null and !newsList.isEmpty()}" class="news-container">
         <div class="news-item" th:each="news : ${newsList}">
             <a th:href="@{/article/{id}(id=${news.newsId})}"
                th:onclick="'recordClick(' + ${news.newsId} + ')'"
@@ -197,8 +362,8 @@
                         뉴스 요약 내용이 여기에 들어갑니다.
                     </p>
                     <div class="news-meta">
-                        <span th:text="'발행일: ' + ${#temporals.format(news.createdAt, 'yyyy-MM-dd')}">발행일: 2025-06-23</span>
-                        <span th:text="' | 카테고리: ' + ${news.subCategory}"> | 서브카테고리</span>
+                        <span th:text="${#temporals.format(news.createdAt, 'yyyy년 MM월 dd일')}">2025년 06월 24일</span>
+                        <span th:text="${news.subCategory}">서브카테고리</span>
                     </div>
                 </div>
             </a>
@@ -207,28 +372,31 @@
 
     <!-- 뉴스가 없는 경우 -->
     <div th:if="${newsList == null or newsList.isEmpty()}" class="no-news">
-        <h2>해당 카테고리의 뉴스가 없습니다.</h2>
-        <p>다른 카테고리를 선택해보세요.</p>
-        <a th:href="@{/home}" style="color: #007bff; text-decoration: underline;">홈으로 돌아가기</a>
+        <h2>해당 카테고리의 뉴스가 없습니다</h2>
+        <p>다른 카테고리를 선택해보세요</p>
+        <a th:href="@{/home}">← 홈으로 돌아가기</a>
     </div>
 
-    <!-- 페이지네이션 (필요시) -->
-    <div class="pagination" th:if="${totalPages > 1}">
-        <a th:href="@{/category/{category}(category=${category}, page=${currentPage - 1})}"
-           th:if="${currentPage > 0}">이전</a>
+    <!-- 페이지네이션 (10페이지까지만) -->
+    <div class="pagination-container" th:if="${totalPages > 1}">
+        <div class="pagination">
+            <a th:href="@{/category/{category}(category=${category}, page=${currentPage - 1})}"
+               th:if="${currentPage > 0}">‹</a>
 
-        <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+            <!-- 최대 10페이지까지만 표시 -->
+            <span th:each="i : ${#numbers.sequence(0, T(java.lang.Math).min(totalPages - 1, 9))}">
             <a th:href="@{/category/{category}(category=${category}, page=${i})}"
                th:text="${i + 1}"
                th:class="${i == currentPage ? 'current' : ''}">1</a>
         </span>
 
-        <a th:href="@{/category/{category}(category=${category}, page=${currentPage + 1})}"
-           th:if="${currentPage < totalPages - 1}">다음</a>
+            <a th:href="@{/category/{category}(category=${category}, page=${currentPage + 1})}"
+               th:if="${currentPage < totalPages - 1 and currentPage < 9}">›</a>
+        </div>
     </div>
-</div>
 
-<script>
+
+    <script>
     function recordClick(newsId) {
         fetch('/news/click', {
             method: 'POST',
