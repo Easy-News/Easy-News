@@ -7,124 +7,245 @@
     <style>
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f4f4f4;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
             color: #333;
-        }
-        a {
-            text-decoration: none;
-            color: inherit;
+            line-height: 1.6;
         }
 
         /* ─────────── HEADER ─────────── */
         header.header-bar {
-            background-color: #B3E5FC;  /* 파스텔톤 블루 */
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
         }
-        /* 타이틀 */
         header.header-bar .logo {
             text-align: center;
-            font-size: 28px;
-            font-weight: bold;
-            padding: 12px 0 4px;
+            font-size: 32px;
+            font-weight: 700;
+            padding: 20px 0 10px;
+            color: white;
         }
-        /* 네비게이션: 위/아래 패딩을 키워서 내부 요소(특히 .user a)를 충분히 감싸도록 함 */
         header.header-bar .header-nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 16px 20px;    /* 충분한 위/아래 패딩 */
-            background: #fff;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-            box-sizing: border-box;
+            padding: 15px 30px;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
         }
         header.header-bar .header-nav .categories a {
-            margin-right: 20px;
+            margin-right: 30px;
             font-size: 16px;
-            font-weight: bold;
+            font-weight: 600;
+            color: #495057;
+            transition: color 0.3s ease;
+            padding: 8px 16px;
+            border-radius: 20px;
         }
-        header.header-bar .header-nav .categories a:last-child {
-            margin-right: 0;
+
+        header.header-bar .header-nav .categories a:hover {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
         }
+
+        header.header-bar .header-nav .categories a.active {
+            background: #667eea;
+            color: white;
+        }
+
         header.header-bar .header-nav .user a {
             font-size: 16px;
-            padding: 6px 12px;
-            border: 2px solid #333;
-            border-radius: 4px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 100px;
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        header.header-bar .header-nav .user a:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
         }
 
         /* ────────── MAIN CONTENT ────────── */
         .container {
-            max-width: 1000px;
-            margin: 30px auto;
-            background: #fff;
-            border-radius: 6px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            padding: 20px;
-            box-sizing: border-box;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
         }
+
+        .section {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+            margin-bottom: 40px;
+            overflow: hidden;
+        }
+
         .section-header {
-            border: 2px solid #ccc;
-            border-radius: 4px;
-            padding: 8px 12px;
-            font-size: 20px;
-            text-align: center;
-            margin-bottom: 20px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 25px 30px;
+            border-bottom: 1px solid #dee2e6;
         }
-        .article {
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #495057;
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: #667eea;
+            margin-right: 15px;
+            border-radius: 2px;
+        }
+
+        .news-container {
+            padding: 30px;
+        }
+
+        .news-item {
             display: flex;
             align-items: flex-start;
-            margin-bottom: 20px;
+            padding: 20px 0;
+            border-bottom: 1px solid #f1f3f4;
+            transition: all 0.3s ease;
         }
-        .article img {
-            width: 200px;
+
+        .news-item:last-child {
+            border-bottom: none;
+        }
+
+        .news-item:hover {
+            transform: translateY(-2px);
+            background: #f8f9fa;
+            margin: 0 -20px;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .news-item img {
+            width: 160px;
             height: 100px;
-            box-sizing: border-box;
             object-fit: cover;
-            border: 2px solid #ccc;
-            border-radius: 4px;
+            border-radius: 12px;
             margin-right: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-        .article .content {
+
+        .news-content {
             flex: 1;
-            height: 100px;
-            box-sizing: border-box;
-            border: 2px solid #ccc;
-            border-radius: 4px;
-            padding: 12px;
         }
-        .article .content h3 {
-            margin-top: 0;
-            margin-bottom: 10px;
+
+        .news-title {
             font-size: 18px;
-        }
-        .article .content p {
-            margin: 0;
+            font-weight: 600;
+            margin: 0 0 10px 0;
+            color: #212529;
             line-height: 1.4;
-            font-size: 14px;
         }
-        .divider {
-            border-top: 1px dashed #ccc;
-            margin: 40px 0;
+
+        .news-title:hover {
+            color: #667eea;
+        }
+
+        .news-summary {
+            font-size: 14px;
+            color: #6c757d;
+            margin: 0 0 10px 0;
+            line-height: 1.5;
+        }
+
+        .news-meta {
+            font-size: 12px;
+            color: #adb5bd;
+            display: flex;
+            gap: 15px;
+        }
+
+        /* ────────── PAGINATION ────────── */
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            background: #f8f9fa;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .pagination {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .page-btn {
+            min-width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            background: white;
+            color: #495057;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .page-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .page-btn.current {
+            background: #667eea;
+            border-color: #667eea;
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
         }
     </style>
 </head>
 <body>
 
 <header class="header-bar">
-    <div class="logo">이지뉴스</div>
+    <div class="logo">
+        <a th:href="@{/home}">EASY-NEWS</a>
+    </div>
     <nav class="header-nav">
         <div class="categories">
-            <a href="#">정치</a>
-            <a href="#">경제</a>
-            <a href="#">사회</a>
-            <a href="#">IT/과학</a>
-            <a href="#">세계</a>
+            <a th:href="@{/category/POLITIC}">정치</a>
+            <a th:href="@{/category/ECONOMY}">경제</a>
+            <a th:href="@{/category/SOCIAL}">사회</a>
+            <a th:href="@{/category/IT_SCIENCE}">IT/과학</a>
+            <a th:href="@{/category/GLOBAL}">세계</a>
         </div>
         <div class="user">
             <a href="#" th:text="${userName}">홍길동</a>
@@ -134,111 +255,209 @@
 
 <div class="container">
     <!-- 개인화 추천 -->
-    <div class="section-header">개인화 추천</div>
-    <div th:if="${personalizedNews != null and !personalizedNews.isEmpty()}">
-        <div class="article" th:each="news : ${personalizedNews}">
-            <a th:href="@{/article/{id}(id=${news.newsId})}"
-               th:onclick="'recordClick(' + ${news.newsId} + ')'"
-               style="display: flex; text-decoration: none; color: inherit;">
-                <img th:src="${news.imageUrl != null ? news.imageUrl : '/emptyImg.png'}"
-                     th:alt="${news.title + ' 사진'}">
-                <div class="content">
-                    <h3 th:text="${news.title}">추천 기사 제목</h3>
-                    <p th:text="${news.summary != null ? news.summary : news.content}">
-                        여기에 개인화된 추천 기사 요약 텍스트가 들어갑니다.
-                    </p>
+    <div class="section">
+        <div class="section-header">
+            <h2 class="section-title">개인화 추천</h2>
+        </div>
+        <div class="news-container">
+            <div id="personalizedNewsContainer">
+                <div class="news-item" th:each="news, iterStat : ${personalizedNews}">
+                    <a th:href="@{/article/{id}(id=${news.newsId})}"
+                       th:onclick="'recordClick(' + ${news.newsId} + ')'"
+                       style="display: flex; width: 100%;">
+                        <img th:src="${news.imageUrl != null ? news.imageUrl : '/emptyImg.png'}"
+                             th:alt="${news.title + ' 사진'}">
+                        <div class="news-content">
+                            <h3 class="news-title" th:text="${news.title}">뉴스 제목</h3>
+                            <p class="news-summary" th:text="${news.summary != null ? news.summary : news.content}">
+                                뉴스 요약 내용
+                            </p>
+                            <div class="news-meta">
+                                <span th:text="${#temporals.format(news.createdAt, 'yyyy-MM-dd')}">2025-06-24</span>
+                                <span th:text="${news.subCategory}">카테고리</span>
+                            </div>
+                        </div>
+                    </a>
                 </div>
-            </a>
+            </div>
+        </div>
+        <div class="pagination-container">
+            <div class="pagination" id="personalizedPagination">
+                <button class="page-btn" onclick="changePage('personalized', -1)">‹</button>
+                <button class="page-btn current" onclick="changePage('personalized', 1)">1</button>
+                <button class="page-btn" onclick="changePage('personalized', 2)">2</button>
+                <button class="page-btn" onclick="changePage('personalized', 3)">3</button>
+                <button class="page-btn" onclick="changePage('personalized', 4)">4</button>
+                <button class="page-btn" onclick="changePage('personalized', 5)">5</button>
+                <button class="page-btn" onclick="changePage('personalized', 1)">›</button>
+            </div>
         </div>
     </div>
-    <div th:if="${personalizedNews == null or personalizedNews.isEmpty()}">
-        <div class="article">
-            <a href="/article/1" style="display: flex; text-decoration: none; color: inherit;">
-                <img src="https://via.placeholder.com/200x120" alt="추천 기사 사진">
-                <div class="content">
-                    <h3>추천 기사 제목</h3>
-                    <p>여기에 개인화된 추천 기사 요약 텍스트가 들어갑니다.</p>
-                </div>
-            </a>
-        </div>
-    </div>
-
-    <div class="divider"></div>
 
     <!-- 헤드라인 -->
-    <div class="section-header">헤드라인</div>
-    <div th:if="${headlineNews != null and !headlineNews.isEmpty()}">
-        <div class="article" th:each="news : ${headlineNews}">
-            <a th:href="@{/article/{id}(id=${news.newsId})}"
-               th:onclick="'recordClick(' + ${news.newsId} + ')'"
-               style="display: flex; text-decoration: none; color: inherit;">
-                <img th:src="${news.imageUrl != null ? news.imageUrl : '/emptyImg.png'}"
-                     th:alt="${news.title + ' 사진'}">
-                <div class="content">
-                    <h3 th:text="${news.title}">헤드라인 기사 제목</h3>
-                    <p th:text="${news.summary != null ? news.summary : news.content}">
-                        헤드라인 기사 요약 내용이 여기에 들어갑니다.
-                    </p>
+    <div class="section">
+        <div class="section-header">
+            <h2 class="section-title">헤드라인</h2>
+        </div>
+        <div class="news-container">
+            <div id="headlineNewsContainer">
+                <div class="news-item" th:each="news, iterStat : ${headlineNews}">
+                    <a th:href="@{/article/{id}(id=${news.newsId})}"
+                       th:onclick="'recordClick(' + ${news.newsId} + ')'"
+                       style="display: flex; width: 100%;">
+                        <img th:src="${news.imageUrl != null ? news.imageUrl : '/emptyImg.png'}"
+                             th:alt="${news.title + ' 사진'}">
+                        <div class="news-content">
+                            <h3 class="news-title" th:text="${news.title}">뉴스 제목</h3>
+                            <p class="news-summary" th:text="${news.summary != null ? news.summary : news.content}">
+                                뉴스 요약 내용
+                            </p>
+                            <div class="news-meta">
+                                <span th:text="${#temporals.format(news.createdAt, 'yyyy-MM-dd')}">2025-06-24</span>
+                                <span th:text="${news.subCategory}">카테고리</span>
+                            </div>
+                        </div>
+                    </a>
                 </div>
-            </a>
+            </div>
+        </div>
+        <div class="pagination-container">
+            <div class="pagination" id="headlinePagination">
+                <button class="page-btn" onclick="changePage('headline', -1)">‹</button>
+                <button class="page-btn current" onclick="changePage('headline', 1)">1</button>
+                <button class="page-btn" onclick="changePage('headline', 2)">2</button>
+                <button class="page-btn" onclick="changePage('headline', 3)">3</button>
+                <button class="page-btn" onclick="changePage('headline', 4)">4</button>
+                <button class="page-btn" onclick="changePage('headline', 5)">5</button>
+                <button class="page-btn" onclick="changePage('headline', 1)">›</button>
+            </div>
         </div>
     </div>
-
-    <div th:if="${headlineNews == null or headlineNews.isEmpty()}">
-        <div class="article">
-            <a href="/article/1" style="display: flex; text-decoration: none; color: inherit;">
-                <img src="https://via.placeholder.com/200x120" alt="헤드라인 사진">
-                <div class="content">
-                    <h3>헤드라인 기사 1</h3>
-                    <p>헤드라인 1의 요약 내용이 여기에 들어갑니다.</p>
-                </div>
-            </a>
-        </div>
-        <div class="article">
-            <a href="/article/2" style="display: flex; text-decoration: none; color: inherit;">
-                <img src="https://via.placeholder.com/200x120" alt="헤드라인 사진">
-                <div class="content">
-                    <h3>헤드라인 기사 2</h3>
-                    <p>헤드라인 2의 요약 내용이 여기에 들어갑니다.</p>
-                </div>
-            </a>
-        </div>
-    </div>
-
-    <div class="divider"></div>
 
     <!-- 실시간 뉴스 -->
-    <div class="section-header">실시간 뉴스</div>
-    <div th:if="${realTimeNews != null and !realTimeNews.isEmpty()}">
-        <div class="article" th:each="news : ${realTimeNews}">
-            <a th:href="@{/article/{id}(id=${news.newsId})}"
-               th:onclick="'recordClick(' + ${news.newsId} + ')'"
-               style="display: flex; text-decoration: none; color: inherit;">
-                <img th:src="${news.imageUrl != null ? news.imageUrl : '/emptyImg.png'}"
-                     th:alt="${news.title + ' 사진'}">
-                <div class="content">
-                    <h3 th:text="${news.title}">실시간 뉴스 제목</h3>
-                    <p th:text="${news.summary != null ? news.summary : news.content}">
-                        실시간으로 업데이트되는 뉴스 요약이 이곳에 표시됩니다.
-                    </p>
-                </div>
-            </a>
+    <div class="section">
+        <div class="section-header">
+            <h2 class="section-title">실시간 뉴스</h2>
         </div>
-    </div>
-    <div th:if="${realTimeNews == null or realTimeNews.isEmpty()}">
-        <div class="article">
-            <a href="/article/1" style="display: flex; text-decoration: none; color: inherit;">
-                <img src="/emptyImg.png" alt="실시간 뉴스 사진">
-                <div class="content">
-                    <h3>실시간 뉴스 제목</h3>
-                    <p>실시간으로 업데이트되는 뉴스 요약이 이곳에 표시됩니다.</p>
+        <div class="news-container">
+            <div id="realTimeNewsContainer">
+                <div class="news-item" th:each="news, iterStat : ${realTimeNews}">
+                    <a th:href="@{/article/{id}(id=${news.newsId})}"
+                       th:onclick="'recordClick(' + ${news.newsId} + ')'"
+                       style="display: flex; width: 100%;">
+                        <img th:src="${news.imageUrl != null ? news.imageUrl : '/emptyImg.png'}"
+                             th:alt="${news.title + ' 사진'}">
+                        <div class="news-content">
+                            <h3 class="news-title" th:text="${news.title}">뉴스 제목</h3>
+                            <p class="news-summary" th:text="${news.summary != null ? news.summary : news.content}">
+                                뉴스 요약 내용
+                            </p>
+                            <div class="news-meta">
+                                <span th:text="${#temporals.format(news.createdAt, 'yyyy-MM-dd')}">2025-06-24</span>
+                                <span th:text="${news.subCategory}">카테고리</span>
+                            </div>
+                        </div>
+                    </a>
                 </div>
-            </a>
+            </div>
+        </div>
+        <div class="pagination-container">
+            <div class="pagination" id="realTimePagination">
+                <button class="page-btn" onclick="changePage('realTime', -1)">‹</button>
+                <button class="page-btn current" onclick="changePage('realTime', 1)">1</button>
+                <button class="page-btn" onclick="changePage('realTime', 2)">2</button>
+                <button class="page-btn" onclick="changePage('realTime', 3)">3</button>
+                <button class="page-btn" onclick="changePage('realTime', 4)">4</button>
+                <button class="page-btn" onclick="changePage('realTime', 5)">5</button>
+                <button class="page-btn" onclick="changePage('realTime', 1)">›</button>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
+    // 각 섹션의 현재 페이지
+    let currentPages = {
+        personalized: 1,
+        headline: 1,
+        realTime: 1
+    };
+
+    // 뉴스 데이터 저장
+    let newsData = {
+        personalized: [],
+        headline: [],
+        realTime: []
+    };
+
+    // 페이지 로드 시 뉴스 데이터 수집
+    document.addEventListener('DOMContentLoaded', function() {
+        collectNewsData();
+        showPage('personalized', 1);
+        showPage('headline', 1);
+        showPage('realTime', 1);
+    });
+
+    function collectNewsData() {
+        // 각 섹션의 뉴스 아이템들을 수집
+        ['personalized', 'headline', 'realTime'].forEach(section => {
+            const container = document.getElementById(section + 'NewsContainer');
+            const items = container.querySelectorAll('.news-item');
+            newsData[section] = Array.from(items);
+        });
+    }
+
+    function showPage(section, pageNum) {
+        const container = document.getElementById(section + 'NewsContainer');
+        const itemsPerPage = 5;
+        const startIndex = (pageNum - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+
+        // 모든 아이템 숨기기
+        container.innerHTML = '';
+
+        // 해당 페이지의 아이템들만 보여주기
+        const pageItems = newsData[section].slice(startIndex, endIndex);
+        pageItems.forEach(item => {
+            container.appendChild(item.cloneNode(true));
+        });
+
+        // 페이지네이션 버튼 업데이트
+        updatePaginationButtons(section, pageNum);
+    }
+
+    function changePage(section, pageNum) {
+        if (pageNum === -1) { // 이전 페이지
+            if (currentPages[section] > 1) {
+                currentPages[section]--;
+                showPage(section, currentPages[section]);
+            }
+        } else if (pageNum === 1 && currentPages[section] < 5) { // 다음 페이지 (› 버튼)
+            currentPages[section]++;
+            showPage(section, currentPages[section]);
+        } else if (pageNum >= 1 && pageNum <= 5) { // 직접 페이지 선택
+            currentPages[section] = pageNum;
+            showPage(section, pageNum);
+        }
+    }
+
+    function updatePaginationButtons(section, currentPage) {
+        const pagination = document.getElementById(section + 'Pagination');
+        const buttons = pagination.querySelectorAll('.page-btn');
+
+        buttons.forEach((btn, index) => {
+            btn.classList.remove('current');
+            if (index === currentPage) { // 숫자 버튼들 (1-5)
+                btn.classList.add('current');
+            }
+        });
+
+        // 이전/다음 버튼 활성화/비활성화
+        buttons[0].disabled = currentPage === 1; // 이전 버튼
+        buttons[6].disabled = currentPage === 5; // 다음 버튼
+    }
+
+    // 개인화 추천용 클릭 API 호출 로직
     function recordClick(newsId) {
         fetch('/news/click', {
             method: 'POST',
@@ -246,6 +465,14 @@
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
             body: 'newsId=' + newsId
+        }).then(response => {
+            if (response.ok) {
+                console.log('클릭 기록 성공: ' + newsId);
+            } else {
+                console.error('클릭 기록 실패: ' + newsId);
+            }
+        }).catch(error => {
+            console.error('클릭 기록 오류:', error);
         });
     }
 </script>

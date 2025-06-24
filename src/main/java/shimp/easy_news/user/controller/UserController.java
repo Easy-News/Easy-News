@@ -3,15 +3,21 @@ package shimp.easy_news.user.controller;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import shimp.easy_news.news.constant.Category;
 import shimp.easy_news.news.constant.SubCategory;
 import shimp.easy_news.news.domain.News;
 import shimp.easy_news.news.repository.NewsRepository;
 import shimp.easy_news.recommendation.VisitLogService;
 import shimp.easy_news.user.dto.HomeNewsResponse;
+import shimp.easy_news.user.dto.NewsDto;
 import shimp.easy_news.user.repository.UserRepository;
 import shimp.easy_news.user.domain.User;
 import shimp.easy_news.user.domain.UserClicks;
@@ -21,6 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
+
 
 @Controller
 @Slf4j
@@ -70,32 +78,60 @@ public class UserController {
         return "login";
     }
 
+//    @GetMapping("/home")
+//    public String home(Model model,
+//                       HttpSession session,
+//                       @RequestParam(defaultValue = "5") int size,
+//                       @RequestParam(defaultValue = "0") int headlinePage,
+//                       @RequestParam(defaultValue = "0") int personalizedPage) {
+//
+//        User loginUser = (User) session.getAttribute("loginUser");
+//        HomeNewsResponse homeNews = newsService.getHomeNewsWithPaging(
+//                headlinePage, personalizedPage, size, loginUser);
+//
+//        model.addAttribute("userName", loginUser != null ? loginUser.getUsername() : "게스트");
+//
+//        // 뉴스 데이터
+//        model.addAttribute("personalizedNews", homeNews.getPersonalizedNews());
+//        model.addAttribute("headlineNews", homeNews.getHeadlineNews());
+//        model.addAttribute("realTimeNews", homeNews.getRealTimeNews());
+//
+//        // 페이지네이션 정보
+//        model.addAttribute("headlinePage", headlinePage);
+//        model.addAttribute("personalizedPage", personalizedPage);
+//        model.addAttribute("headlineTotalPages", homeNews.getHeadlineTotalPages());
+//        model.addAttribute("personalizedTotalPages", homeNews.getPersonalizedTotalPages());
+//
+//        return "home";
+//    }
+
     @GetMapping("/home")
     public String home(Model model,
                        HttpSession session,
-                       @RequestParam(defaultValue = "5") int size) {
+                       @RequestParam(defaultValue = "0") int headlinePage,
+                       @RequestParam(defaultValue = "0") int personalizedPage,
+                       @RequestParam(defaultValue = "0") int realTimePage) {
 
         User loginUser = (User) session.getAttribute("loginUser");
-        HomeNewsResponse homeNews;
 
-        if (loginUser != null) {
-            homeNews = newsService.getHomeNews(0, size, loginUser);
-            model.addAttribute("userName", loginUser.getUsername());
-        }else{
-            homeNews = newsService.getHomeNews(0,size,null);
-            model.addAttribute("userName", "게스트");
-        }
+        // 25개씩 한 번에 불러와서 클라이언트에서 페이징 처리
+        HomeNewsResponse homeNews = newsService.getHomeNewsForClientPaging(loginUser);
 
-        NewsCheckForm newsCheckForm = new NewsCheckForm();
-        newsCheckForm.setSize(size);
+        model.addAttribute("userName", loginUser != null ? loginUser.getUsername() : "게스트");
 
-        model.addAttribute("newsCheckForm", newsCheckForm);
+        // 전체 뉴스 데이터
         model.addAttribute("personalizedNews", homeNews.getPersonalizedNews());
         model.addAttribute("headlineNews", homeNews.getHeadlineNews());
         model.addAttribute("realTimeNews", homeNews.getRealTimeNews());
 
+        // 현재 페이지 정보
+        model.addAttribute("headlinePage", headlinePage);
+        model.addAttribute("personalizedPage", personalizedPage);
+        model.addAttribute("realTimePage", realTimePage);
+
         return "home";
     }
+
 
     @PostMapping("/news/click")
     @ResponseBody
@@ -124,10 +160,10 @@ public class UserController {
 
         // 모든 이미지 URL 추출
         List<String> imageUrls = newsCheckService.extractAllImageUrls(news.getImageUrl());
-        for (String img : imageUrls) {
-            System.out.println("뉴스 이미지: " + img);
-        }
-        System.out.println("추출된 이미지 개수: " + imageUrls.size());
+//        for (String img : imageUrls) {
+//            System.out.println("뉴스 이미지: " + img);
+//        }
+//        System.out.println("추출된 이미지 개수: " + imageUrls.size());
 
         User loginUser = (User) session.getAttribute("loginUser");
 //        if (loginUser != null) {
@@ -147,6 +183,60 @@ public class UserController {
 
         return "article";
     }
+
+    @GetMapping("/category/{category}")
+    public String categoryNews(@PathVariable String category,
+                               @RequestParam(defaultValue = "0") int page,
+                               @RequestParam(defaultValue = "10") int size,
+                               Model model,
+                               HttpSession session) {
+
+        // 페이지를 최대 9까지만 허용 (0-9 = 10페이지)
+        if (page > 9) {
+            page = 9;
+        }
+
+        try {
+            Category categoryEnum = Category.valueOf(category);
+
+            Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+            Page<News> newsPage = newsRepository.findByCategory(categoryEnum, pageable);
+
+            List<NewsDto> newsList = newsPage.getContent().stream()
+                    .map(newsCheckService::convertToDto)
+                    .collect(Collectors.toList());
+
+            User loginUser = (User) session.getAttribute("loginUser");
+
+            // 총 페이지 수를 10으로 제한
+            int totalPages = Math.min(newsPage.getTotalPages(), 10);
+
+            model.addAttribute("newsList", newsList);
+            model.addAttribute("category", category);
+            model.addAttribute("categoryName", getCategoryDisplayName(category));
+            model.addAttribute("currentPage", page);
+            model.addAttribute("totalPages", totalPages);
+            model.addAttribute("userName", loginUser != null ? loginUser.getNickname() : "게스트");
+
+            return "category-news";
+
+        } catch (IllegalArgumentException e) {
+            return "redirect:/home";
+        }
+    }
+
+
+    private String getCategoryDisplayName(String category) {
+        switch (category) {
+            case "POLITIC": return "정치";
+            case "ECONOMY": return "경제";
+            case "SOCIAL": return "사회";
+            case "IT_SCIENCE": return "IT/과학";
+            case "GLOBAL": return "세계";
+            default: return "뉴스";
+        }
+    }
+
 
 
     private void updateUserClicks(User user, SubCategory subCategory) {

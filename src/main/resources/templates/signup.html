@@ -3,136 +3,324 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>회원가입</title>
+    <title>회원가입 - 이지뉴스</title>
     <style>
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f4f4f4;
-        }
-        .header-bar {
-            background-color: #B3E5FC;
-            color: #333;
-            text-align: center;
-            padding: 15px 0;
-            font-size: 24px;
-            font-weight: bold;
-        }
-        .signup-form {
-            background: #fff;
-            padding: 20px 30px;
-            border-radius: 6px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 400px;
-            margin: 40px auto;
-            box-sizing: border-box;
-        }
-        .signup-form h2 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .signup-form label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        .signup-form input[type="text"],
-        .signup-form input[type="password"],
-        .signup-form input[type="email"],
-        .signup-form input[type="time"] { /* 시간 입력 필드 스타일 추가 */
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        .category-fieldset {
-            border: 2px solid #ccc;
-            border-radius: 4px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-        .category-fieldset legend {
-            font-weight: bold;
-            padding: 0 8px;
-        }
-        .category-fieldset .checkbox-group {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
             display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 10px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px 0;
         }
-        .category-fieldset label {
+
+        .header-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 32px;
+            font-weight: 700;
+            z-index: 100;
+        }
+
+        .signup-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            padding: 50px 40px;
+            width: 100%;
+            max-width: 500px;
+            margin-top: 100px;
+            margin-bottom: 40px;
+        }
+
+        .signup-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .signup-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #212529;
+            margin: 0 0 10px 0;
+        }
+
+        .signup-subtitle {
+            font-size: 16px;
+            color: #6c757d;
+            margin: 0;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+            font-size: 14px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            background: #f8f9fa;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: #adb5bd;
+        }
+
+        .category-fieldset {
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            background: #f8f9fa;
+        }
+
+        .category-legend {
+            font-weight: 600;
+            color: #495057;
+            padding: 0 12px;
+            font-size: 14px;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .radio-item {
             display: flex;
             align-items: center;
+            padding: 12px 16px;
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .radio-item:hover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .radio-item input[type="radio"] {
+            margin-right: 10px;
+            accent-color: #667eea;
+        }
+
+        .radio-item.selected {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .radio-label {
             font-size: 14px;
             cursor: pointer;
+            margin: 0;
         }
-        .category-fieldset input[type="radio"] {
-            margin-right: 6px;
-        }
-        .signup-form button {
+
+        .signup-button {
             width: 100%;
-            padding: 12px;
-            background: #28a745;
-            color: #fff;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 12px;
             font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 25px;
         }
-        .signup-form button:hover {
-            background: #218838;
+
+        .signup-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .login-link {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .login-link p {
+            margin: 0;
+            color: #6c757d;
+            font-size: 14px;
+        }
+
+        .login-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .login-link a:hover {
+            color: #5a6fd8;
+            text-decoration: underline;
+        }
+
+        /* 반응형 */
+        @media (max-width: 768px) {
+            .signup-container {
+                margin: 80px 20px 20px;
+                padding: 40px 30px;
+            }
+
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+
+            .header-bar {
+                font-size: 24px;
+                padding: 15px 0;
+            }
         }
     </style>
 </head>
 <body>
-<div class="header-bar">이지뉴스</div>
+<div class="header-bar">EASY-NEWS</div>
 
-<form th:action="@{/signup}" th:object="${user}" class="signup-form" method="post">
-    <h2>회원가입</h2>
+<div class="signup-container">
+    <div class="signup-header">
+        <h1 class="signup-title">회원가입</h1>
+        <p class="signup-subtitle">개인화된 뉴스 서비스를 위해 가입해주세요</p>
+    </div>
 
-    <label for="username">아이디</label>
-    <input type="text" th:field="*{username}" placeholder="아이디를 입력하세요" required />
-
-    <label for="password">비밀번호</label>
-    <input type="password" th:field="*{password}" placeholder="비밀번호를 입력하세요" required />
-
-    <label for="email">이메일</label>
-    <input type="email" th:field="*{email}" placeholder="이메일을 입력하세요" required />
-
-    <label for="nickname">닉네임</label>
-    <input type="text" th:field="*{nickname}" placeholder="닉네임을 입력하세요" required />
-
-    <label for="mailingTime">메일 수신 시간</label>
-    <input type="time" th:field="*{mailingTime}" required />
-    <fieldset class="category-fieldset">
-        <legend>관심 카테고리</legend>
-        <div class="checkbox-group">
-            <label>
-                <input type="radio" th:field="*{interested}" value="POLITIC" /> 정치
-            </label>
-            <label>
-                <input type="radio" th:field="*{interested}" value="ECONOMY" /> 경제
-            </label>
-            <label>
-                <input type="radio" th:field="*{interested}" value="SOCIAL" /> 사회
-            </label>
-            <label>
-                <input type="radio" th:field="*{interested}" value="LIVING_CULTURE" /> 생활문화
-            </label>
-            <label>
-                <input type="radio" th:field="*{interested}" value="IT_SCIENCE" /> IT/과학
-            </label>
-            <label>
-                <input type="radio" th:field="*{interested}" value="GLOBAL" /> 글로벌
-            </label>
+    <form th:action="@{/signup}" th:object="${user}" method="post">
+        <div class="form-group">
+            <label for="username" class="form-label">아이디</label>
+            <input type="text"
+                   th:field="*{username}"
+                   class="form-input"
+                   placeholder="아이디를 입력하세요"
+                   required />
         </div>
-    </fieldset>
 
-    <button type="submit">가입하기</button>
-</form>
+        <div class="form-group">
+            <label for="password" class="form-label">비밀번호</label>
+            <input type="password"
+                   th:field="*{password}"
+                   class="form-input"
+                   placeholder="비밀번호를 입력하세요"
+                   required />
+        </div>
+
+        <div class="form-group">
+            <label for="email" class="form-label">이메일</label>
+            <input type="email"
+                   th:field="*{email}"
+                   class="form-input"
+                   placeholder="이메일을 입력하세요"
+                   required />
+        </div>
+
+        <div class="form-group">
+            <label for="nickname" class="form-label">닉네임</label>
+            <input type="text"
+                   th:field="*{nickname}"
+                   class="form-input"
+                   placeholder="닉네임을 입력하세요"
+                   required />
+        </div>
+
+        <div class="form-group">
+            <label for="mailingTime" class="form-label">메일 수신 시간</label>
+            <input type="time"
+                   th:field="*{mailingTime}"
+                   class="form-input"
+                   required />
+        </div>
+
+        <fieldset class="category-fieldset">
+            <legend class="category-legend">관심 카테고리</legend>
+            <div class="checkbox-group">
+                <label class="radio-item">
+                    <input type="radio" th:field="*{interested}" value="POLITIC" />
+                    <span class="radio-label">정치</span>
+                </label>
+                <label class="radio-item">
+                    <input type="radio" th:field="*{interested}" value="ECONOMY" />
+                    <span class="radio-label">경제</span>
+                </label>
+                <label class="radio-item">
+                    <input type="radio" th:field="*{interested}" value="SOCIAL" />
+                    <span class="radio-label">사회</span>
+                </label>
+                <label class="radio-item">
+                    <input type="radio" th:field="*{interested}" value="LIVING_CULTURE" />
+                    <span class="radio-label">생활문화</span>
+                </label>
+                <label class="radio-item">
+                    <input type="radio" th:field="*{interested}" value="IT_SCIENCE" />
+                    <span class="radio-label">IT/과학</span>
+                </label>
+                <label class="radio-item">
+                    <input type="radio" th:field="*{interested}" value="GLOBAL" />
+                    <span class="radio-label">글로벌</span>
+                </label>
+            </div>
+        </fieldset>
+
+        <button type="submit" class="signup-button">가입하기</button>
+    </form>
+
+    <div class="login-link">
+        <p>이미 계정이 있으신가요? <a href="/login">로그인</a></p>
+    </div>
+</div>
+
+<script>
+    // 라디오 버튼 선택 시 스타일 변경
+    document.addEventListener('DOMContentLoaded', function() {
+        const radioItems = document.querySelectorAll('.radio-item');
+        const radioInputs = document.querySelectorAll('input[type="radio"]');
+
+        radioInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                radioItems.forEach(item => item.classList.remove('selected'));
+                if (this.checked) {
+                    this.closest('.radio-item').classList.add('selected');
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>

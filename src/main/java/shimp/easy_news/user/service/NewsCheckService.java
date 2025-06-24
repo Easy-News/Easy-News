@@ -1,6 +1,7 @@
 package shimp.easy_news.user.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -54,6 +55,89 @@ public class NewsCheckService {
 
         return convertToDto(personalizedNews);
     }
+
+    public HomeNewsResponse getHomeNewsWithPaging(int headlinePage, int personalizedPage,
+                                                  int size, User user) {
+
+        // 헤드라인 뉴스 페이징 (기존 getHeadlineNews 로직 활용)
+        Pageable headlinePageable = PageRequest.of(headlinePage, size, Sort.by("createdAt").descending());
+        Page<News> headlineNewsPage = newsRepository.findPageByNewsType(NewsType.HEADLINE, headlinePageable);
+        List<NewsDto> headlineNews = convertToDto(headlineNewsPage.getContent());
+
+        // 개인화 추천 뉴스 페이징 (기존 getPersonalizedNews 로직 활용)
+        List<NewsDto> personalizedNews;
+        int personalizedTotalPages;
+
+        if (user == null || user.getUserClicks() == null) {
+            // 비로그인 사용자는 헤드라인 뉴스 사용
+            personalizedNews = headlineNews;
+            personalizedTotalPages = headlineNewsPage.getTotalPages();
+        } else {
+            // 기존 analyzeUserPreferences 함수 활용
+            List<SubCategory> preferredCategories = analyzeUserPreferences(user.getUserClicks());
+
+            if (preferredCategories.isEmpty()) {
+                personalizedNews = headlineNews;
+                personalizedTotalPages = headlineNewsPage.getTotalPages();
+            } else {
+                Pageable personalizedPageable = PageRequest.of(personalizedPage, size, Sort.by("createdAt").descending());
+                List<News> personalizedNewsList = newsRepository.findBySubCategoryInOrderByCreatedAtDesc(
+                        preferredCategories, personalizedPageable);
+                personalizedNews = convertToDto(personalizedNewsList);
+
+                // 개인화 뉴스의 총 페이지 수 계산 (근사치)
+                personalizedTotalPages = Math.max(1, (int) Math.ceil((double) personalizedNewsList.size() / size));
+            }
+        }
+
+        // 실시간 뉴스 (기존 getRealTimeNews 함수 활용)
+        List<NewsDto> realTimeNews = getRealTimeNews(size);
+
+        return HomeNewsResponse.builder()
+                .personalizedNews(personalizedNews)
+                .headlineNews(headlineNews)
+                .realTimeNews(realTimeNews)
+                .headlineTotalPages(headlineNewsPage.getTotalPages())
+                .personalizedTotalPages(personalizedTotalPages)
+                .build();
+    }
+
+    public HomeNewsResponse getHomeNewsForClientPaging(User user) {
+        int pageSize = 25; // 25개씩 불러오기
+
+        // 헤드라인 뉴스 25개
+        Pageable headlinePageable = PageRequest.of(0, pageSize, Sort.by("createdAt").descending());
+        List<News> headlineNewsList = newsRepository.findByNewsType(NewsType.HEADLINE, headlinePageable);
+        List<NewsDto> headlineNews = convertToDto(headlineNewsList);
+
+        // 개인화 추천 뉴스 25개
+        List<NewsDto> personalizedNews;
+        if (user == null || user.getUserClicks() == null) {
+            personalizedNews = headlineNews; // 헤드라인과 동일
+        } else {
+            List<SubCategory> preferredCategories = analyzeUserPreferences(user.getUserClicks());
+            if (preferredCategories.isEmpty()) {
+                personalizedNews = headlineNews;
+            } else {
+                Pageable personalizedPageable = PageRequest.of(0, pageSize, Sort.by("createdAt").descending());
+                List<News> personalizedNewsList = newsRepository.findBySubCategoryInOrderByCreatedAtDesc(
+                        preferredCategories, personalizedPageable);
+                personalizedNews = convertToDto(personalizedNewsList);
+            }
+        }
+
+        // 실시간 뉴스 25개
+        Pageable realTimePageable = PageRequest.of(0, pageSize, Sort.by("createdAt").descending());
+        List<News> realTimeNewsList = newsRepository.findByNewsType(NewsType.LIVE, realTimePageable);
+        List<NewsDto> realTimeNews = convertToDto(realTimeNewsList);
+
+        return HomeNewsResponse.builder()
+                .personalizedNews(personalizedNews)
+                .headlineNews(headlineNews)
+                .realTimeNews(realTimeNews)
+                .build();
+    }
+
 
     private List<SubCategory> analyzeUserPreferences(UserClicks userClicks) {
         List<SubCategory> preferences = new ArrayList<>();
@@ -114,7 +198,7 @@ public class NewsCheckService {
                 .collect(Collectors.toList());
     }
 
-    private NewsDto convertToDto(News news) {
+    public NewsDto convertToDto(News news) {
         return NewsDto.builder()
                 .newsId(news.getNewsId())
                 .title(news.getTitle())
